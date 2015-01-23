@@ -469,13 +469,13 @@ def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
     def rename(origColName): # a function that the pivoted column names will be renamed with
 	newColName = re.sub('1bcg', 'bcg', origColName)
 	newColName = re.sub('2bcgdil', 'bcgdil', newColName)
-	newColName = re.sub('3polio', 'polio', newColName)
-	newColName = re.sub('4penta', 'penta', newColName)
+	newColName = re.sub('2polio', 'polio', newColName)
+	newColName = re.sub('3penta', 'penta', newColName)
 	newColName = re.sub('5measles', 'measles', newColName)
 	newColName = re.sub('6measlesdil', 'measlesdil', newColName)
-	newColName = re.sub('7pcv10', 'pcv', newColName)
+	newColName = re.sub('4pcv10', 'pcv', newColName)
 	newColName = re.sub('8hpv', 'hpv', newColName)
-	newColName = re.sub('9tetanus', 'tetanus', newColName)
+	newColName = re.sub('8tetanus', 'tetanus', newColName)
 	return 'epi_use_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiUseTable, keyColName, epiUseProdCodes, cols, rename)
 
