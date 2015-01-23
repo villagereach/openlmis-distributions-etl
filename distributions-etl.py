@@ -453,6 +453,7 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
 	newColName = re.sub(r'bcg20', 'bcg', newColName)
 	newColName = re.sub(r'measles10', 'measles', newColName)
 	newColName = re.sub(r'tetanus10', 'tetanus', newColName)
+	newColName = re.sub(r'yfv1', 'hpv2', newColName)
 	return 'epi_inventory_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiInvTable, keyColName, epiInvProdCodes, cols, rename)
 
@@ -474,7 +475,7 @@ def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
 	newColName = re.sub('5measles', 'measles', newColName)
 	newColName = re.sub('6measlesdil', 'measlesdil', newColName)
 	newColName = re.sub('4pcv10', 'pcv', newColName)
-	newColName = re.sub('8hpv', 'hpv', newColName)
+	newColName = re.sub('6yfv', 'hpv', newColName)
 	newColName = re.sub('8tetanus', 'tetanus', newColName)
 	return 'epi_use_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiUseTable, keyColName, epiUseProdCodes, cols, rename)
