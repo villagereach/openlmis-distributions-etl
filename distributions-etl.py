@@ -49,8 +49,8 @@ PRODUCT_GROUP_TABLE = 'product_groups'
 
 
 # Geo level name=>code that visit report record wants
-GEO_LEVEL = {'district': 'dept',
-	     'province': 'commune' }
+GEO_LEVEL = {'district': 'commune',
+	     'province': 'dept' }
 
 
 FACILITY_VISIT_SQL = """SELECT fv.id AS id
