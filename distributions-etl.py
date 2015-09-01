@@ -27,6 +27,8 @@ DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = "postgres"
 
+SELV_START_DATE = '2014-04-01'
+
 # table names
 ADULT_COVERAGE_TABLE = 'vaccination_adult_coverage_line_items'
 ADULT_COVERAGE_OPEN_VIAL_TABLE = 'adult_coverage_opened_vial_line_items'
@@ -78,12 +80,14 @@ VRMIS_SQL = """SELECT v.*
     JOIN %(geoZoneTable)s prov ON (v.province_id=prov.id)
     JOIN %(dzTable)s dz ON (v.delivery_zone_id=dz.id)
     JOIN %(periodTable)s period ON (v.period_id=period.id)
+    WHERE period.startdate < '%(selvStartDate)s'
     ORDER BY f.id, period.startdate""" % \
     {'vrmisTable': VRMIS_TABLE, 
      'facTable': FACILITY_TABLE, 
      'geoZoneTable': GEO_ZONE_TABLE, 
      'dzTable': DZ_TABLE, 
-     'periodTable': PERIOD_TABLE }
+     'periodTable': PERIOD_TABLE,
+     'selvStartDate': SELV_START_DATE }
 
 
 FACILITY_VISIT_SQL = """SELECT fv.id AS id
@@ -114,14 +118,15 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
     JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
     LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
-    WHERE period.startdate >= '2014-04-01'""" % \
+    WHERE period.startdate >= '%(selvStartDate)s'""" % \
     {'facilityVisitsTable': FACILITY_VISIT_TABLE,
      'facilitiesTable': FACILITY_TABLE,
      'fullCoveragesTable':  FULL_COVERAGE_TABLE,
      'distributionsTable': DISTRIBUTION_TABLE,
      'deliveryZonesTable': DZ_TABLE,
      'periodsTable': PERIOD_TABLE,
-     'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE}
+     'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE,
+     'selvStartDate': SELV_START_DATE}
 
 
 GEO_ZONE_SQL = """ SELECT gz.id
@@ -296,8 +301,6 @@ def loadAllFromSql(conn, sql):
 
 
 def storeVisits(conn, visitRows, fields):
-    if len(visitRows) == 0:
-	return
     cur = conn.cursor()
     cur.execute( 'DELETE FROM ' + FACILITY_VISIT_REPORT_TABLE) # clear before new load
 
@@ -452,10 +455,7 @@ def facilityAddGeoLevels(fac, geoZoneTable):
     geoZoneFirst = geoZoneTable.get(fac['geographiczoneid'])
     geoFlat = geoZoneFlatten(geoZoneFirst, geoZoneTable)
     for geoLevelName, geoLevelCode in GEO_LEVEL.iteritems():
-	geoLevel = geoFlat.get(geoLevelCode)
-	if geoLevel is None:
-	    raise Exception('GeoLevelCode ' + geoLevelCode + ' not in geographic level table')
-	for geoK, geoV in geoLevel.iteritems():
+	for geoK, geoV in geoFlat.get(geoLevelCode).iteritems():
 	    fac[geoLevelName + '_' + geoK] = geoV
 
     return fac # allows inline use
@@ -697,7 +697,7 @@ try:
 
     dbConn.commit()
 
-    print "distributions-etl has completed"
+    print "SelvData has completed"
 except BaseException, err:
     if dbConn is not None:
 	dbConn.rollback()
