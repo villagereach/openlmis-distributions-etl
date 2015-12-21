@@ -89,7 +89,7 @@ VRMIS_SQL = """SELECT v.*
      'periodTable': PERIOD_TABLE,
      'selvStartDate': SELV_START_DATE }
 
-
+#Note that the second conditions (f.code != 'G102' AND period.startdate != '2015-10-01') is intended for temporary use, pending feedback from the field office.
 FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , f.code || '-' || to_char(period.startdate, 'YYYY-MM') AS visit_code
     , fv.facilityid AS facility_id
@@ -118,7 +118,7 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
     JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
     LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
-    WHERE period.startdate >= '%(selvStartDate)s'""" % \
+    WHERE period.startdate >= '%(selvStartDate)s' AND (f.code != 'G102' AND period.startdate != '2015-10-01') """ % \
     {'facilityVisitsTable': FACILITY_VISIT_TABLE,
      'facilitiesTable': FACILITY_TABLE,
      'fullCoveragesTable':  FULL_COVERAGE_TABLE,
