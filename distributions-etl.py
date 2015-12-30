@@ -22,10 +22,12 @@ Limitations:
 
 
 FIELD_MAP = 'fieldmap.csv'
+#DB_NAME = 'open_lmis_demo_sd'
 DB_NAME = 'open_lmis'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = "postgres"
+PASSWORD = "p@ssw0rd"
 
 SELV_START_DATE = '2014-04-01'
 
@@ -50,9 +52,18 @@ PRODUCT_GROUP_TABLE = 'product_groups'
 VRMIS_TABLE = 'vrmis'
 
 
+# New columns added for Soldevelo:
+# numberofstockoutdays
+# idealquantitybypacksize?
+
+
 # Geo level name=>code that visit report record wants
 GEO_LEVEL = {'district': 'dist',
 	     'province': 'prov' }
+
+# Temporary changes for soldevelo-demo-db:
+#GEO_LEVEL = {'state': 'state',
+# 	     'province': 'prov' }
 
 
 VRMIS_SQL = """SELECT v.*
@@ -158,6 +169,7 @@ EPI_USE_LINE_ITEM_SQL = """SELECT euli.facilityvisitid
     , euli.received
     , euli.distributed
     , euli.loss
+    , euli.numberofstockoutdays AS number_of_stockout_days
     FROM %(epiUseTable)s AS euli
     JOIN %(productGroupTable)s AS pg ON (euli.productgroupid=pg.id)""" % \
     {'epiUseTable': EPI_USE_TABLE, 
@@ -312,7 +324,8 @@ def storeVisits(conn, visitRows, fields):
     # statement later to be one statement, one column list and then a list of all the values/rows
     formatStr= '(' + ','.join('%s' for fname in fields) + ')'
     valStr = ','.join(cur.mogrify(formatStr, tup) for tup in valueTups)
-    insStr = 'INSERT INTO ' + FACILITY_VISIT_REPORT_TABLE + ' ' + colStr + ' VALUES ' + valStr 
+    insStr = 'INSERT INTO ' + FACILITY_VISIT_REPORT_TABLE + ' ' + colStr + ' VALUES ' + valStr
+
     cur.execute(insStr)
     cur.close()
 
@@ -365,7 +378,9 @@ def loadOpenLmis(conn):
     facilityTable = rowToTable( loadRefTable(cur, FACILITY_TABLE), 'id' )
     geoZoneTable = rowToTable( loadGeoZone(cur), 'id' )
 
-    # adds all geozones by geo level to all facilities
+    # adds all geozones by geo level to all facilities.
+    # more specifically, for each set of values (row) in the facilityTable, the above code calls facilityAddGeoLevels
+    # (passing the facilityTable-row in as the 1st arg, and geoZoneTable as the 2nd).
     map(lambda f: facilityAddGeoLevels(f, geoZoneTable), facilityTable.values())
 
     # load facility visit's
@@ -447,7 +462,7 @@ def geoZoneFlatten(geoZone, geoZoneTable):
 
 def facilityAddGeoLevels(fac, geoZoneTable):
     """
-    Updates a facility dictionary in place with key/values from the geographic zone's the facility is in.
+    Updates a facility dictionary in place with key/values from the geographic zones the facility is in.
     Uses GEO_LEVEL to only add zone's that are at those levels and adds keys prepended with the geographic level
     name.
     """
@@ -486,16 +501,19 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
     """
 
     cols = ['existingquantity', 'spoiledquantity', 'deliveredquantity', 'idealquantity']
+    #cols in "epi_inventory_line_items" table
+    #cols = ['existingquantity', 'spoiledquantity', 'deliveredquantity', 'idealquantity', 'idealquantitybypacksize']
+
     keyColName = 'productcode'
     
     # pivot the line items into a column structure
     def rename(origColName): # a function that the pivoted column names will be renamed with
-	newColName = re.sub(r'quantity', '', origColName)
-	newColName = re.sub(r'ideal', 'isa', newColName)
-	newColName = re.sub(r'bcg20', 'bcg', newColName)
-	newColName = re.sub(r'measles10', 'measles', newColName)
-	newColName = re.sub(r'tetanus10', 'tetanus', newColName)
-	return 'epi_inventory_' + newColName
+        newColName = re.sub(r'quantity', '', origColName) #replace 'quantity' with '' within origColName
+        newColName = re.sub(r'ideal', 'isa', newColName) #replace 'ideal' with 'isa' within newColName
+        newColName = re.sub(r'bcg20', 'bcg', newColName)
+        newColName = re.sub(r'measles10', 'measles', newColName)
+        newColName = re.sub(r'tetanus10', 'tetanus', newColName)
+        return 'epi_inventory_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiInvTable, keyColName, epiInvProdCodes, cols, rename)
 
 
@@ -506,7 +524,7 @@ def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
     into the facility visit row.
     """
     
-    cols = ['first_of_month', 'received', 'distributed', 'loss', 'end_of_month', 'expiration']
+    cols = ['first_of_month', 'received', 'distributed', 'loss', 'end_of_month', 'expiration', 'number_of_stockout_days']
     keyColName = 'product_code'
     def rename(origColName): # a function that the pivoted column names will be renamed with
 	newColName = re.sub('1bcg', 'bcg', origColName)
@@ -679,7 +697,7 @@ def printMissingFieldNames(visitRows, fieldNames):
 
 dbConn = None
 try:
-    dbConn = psycopg2.connect(host=DB_HOST, port=DB_PORT, database=DB_NAME, user=DB_USER)
+    dbConn = psycopg2.connect(host=DB_HOST, port=DB_PORT, database=DB_NAME, user=DB_USER, password=PASSWORD)
 
     # load open lmis facility visit and vrmis rows
     facVisitRows = loadOpenLmis(dbConn)

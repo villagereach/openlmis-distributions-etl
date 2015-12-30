@@ -1,4 +1,4 @@
-DROP TABLE facility_visits_report;
+DROP TABLE IF EXISTS facility_visits_report;
 CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, visit_code text NOT NULL unique
 	, facility_id integer NOT NULL references facilities(id)
@@ -82,54 +82,63 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_use_bcg_loss integer
 	, epi_use_bcg_end_of_month integer
 	, epi_use_bcg_expiration date
+	, epi_use_bcg_number_of_stockout_days integer
 	, epi_use_bcgdil_first_of_month integer
 	, epi_use_bcgdil_received integer
 	, epi_use_bcgdil_distributed integer
 	, epi_use_bcgdil_loss integer
 	, epi_use_bcgdil_end_of_month integer
 	, epi_use_bcgdil_expiration date
+	, epi_use_bcgdil_number_of_stockout_days integer
 	, epi_use_polio_first_of_month integer
 	, epi_use_polio_received integer
 	, epi_use_polio_distributed integer
 	, epi_use_polio_loss integer
 	, epi_use_polio_end_of_month integer
 	, epi_use_polio_expiration date
+	, epi_use_polio_number_of_stockout_days integer
 	, epi_use_penta_first_of_month integer
 	, epi_use_penta_received integer
 	, epi_use_penta_distributed integer
 	, epi_use_penta_loss integer
 	, epi_use_penta_end_of_month integer
 	, epi_use_penta_expiration date
+	, epi_use_penta_number_of_stockout_days integer
 	, epi_use_pcv_first_of_month integer
 	, epi_use_pcv_received integer
 	, epi_use_pcv_distributed integer
 	, epi_use_pcv_loss integer
 	, epi_use_pcv_end_of_month integer
 	, epi_use_pcv_expiration date
+	, epi_use_pcv_number_of_stockout_days integer
 	, epi_use_hpv_first_of_month integer
 	, epi_use_hpv_received integer
 	, epi_use_hpv_distributed integer
 	, epi_use_hpv_loss integer
 	, epi_use_hpv_end_of_month integer
 	, epi_use_hpv_expiration date
+	, epi_use_hpv_number_of_stockout_days integer
 	, epi_use_measles_first_of_month integer
 	, epi_use_measles_received integer
 	, epi_use_measles_distributed integer
 	, epi_use_measles_loss integer
 	, epi_use_measles_end_of_month integer
 	, epi_use_measles_expiration date
+	, epi_use_measles_number_of_stockout_days integer
 	, epi_use_measlesdil_first_of_month integer
 	, epi_use_measlesdil_received integer
 	, epi_use_measlesdil_distributed integer
 	, epi_use_measlesdil_loss integer
 	, epi_use_measlesdil_end_of_month integer
 	, epi_use_measlesdil_expiration date
+	, epi_use_measlesdil_number_of_stockout_days integer
 	, epi_use_tetanus_first_of_month integer
 	, epi_use_tetanus_received integer
 	, epi_use_tetanus_distributed integer
 	, epi_use_tetanus_end_of_month integer
 	, epi_use_tetanus_loss integer
 	, epi_use_tetanus_expiration date
+	, epi_use_tetanus_number_of_stockout_days integer
 	, adult_coverage_mif_community_tetanus1hc integer
 	, adult_coverage_mif_community_tetanus1mb integer
 	, adult_coverage_mif_community_tetanus25hc integer
