@@ -61,6 +61,26 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_inventory_tetanus_existing integer
 	, epi_inventory_tetanus_delivered integer
 	, epi_inventory_tetanus_isa integer
+	, epi_inventory_ipv_spoiled integer
+	, epi_inventory_ipv_existing integer
+	, epi_inventory_ipv_delivered integer
+	, epi_inventory_ipv_isa integer
+	, epi_inventory_rotarix_spoiled integer
+	, epi_inventory_rotarix_existing integer
+	, epi_inventory_rotarix_delivered integer
+	, epi_inventory_rotarix_isa integer
+	, epi_inventory_sarampo1_spoiled integer
+	, epi_inventory_sarampo1_existing integer
+	, epi_inventory_sarampo1_delivered integer
+	, epi_inventory_sarampo1_isa integer
+	, epi_inventory_sarampo2_spoiled integer
+	, epi_inventory_sarampo2_existing integer
+	, epi_inventory_sarampo2_delivered integer
+	, epi_inventory_sarampo2_isa integer
+	, epi_inventory_sarampo2diluent_spoiled integer
+	, epi_inventory_sarampo2diluent_existing integer
+	, epi_inventory_sarampo2diluent_delivered integer
+	, epi_inventory_sarampo2diluent_isa integer
 	, epi_inventory_gas_existing integer
 	, epi_inventory_gas_delivered integer
 	, epi_inventory_gas_isa integer
@@ -139,6 +159,48 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_use_tetanus_loss integer
 	, epi_use_tetanus_expiration date
 	, epi_use_tetanus_number_of_stockout_days integer
+	, epi_use_ipv_first_of_month integer
+	, epi_use_ipv_received integer
+	, epi_use_ipv_distributed integer
+	, epi_use_ipv_end_of_month integer
+	, epi_use_ipv_loss integer
+	, epi_use_ipv_expiration date
+	, epi_use_ipv_number_of_stockout_days integer
+	, epi_use_rotarix_first_of_month integer
+	, epi_use_rotarix_received integer
+	, epi_use_rotarix_distributed integer
+	, epi_use_rotarix_end_of_month integer
+	, epi_use_rotarix_loss integer
+	, epi_use_rotarix_expiration date
+	, epi_use_rotarix_number_of_stockout_days integer
+	, epi_use_sarampo1_first_of_month integer
+	, epi_use_sarampo1_received integer
+	, epi_use_sarampo1_distributed integer
+	, epi_use_sarampo1_end_of_month integer
+	, epi_use_sarampo1_loss integer
+	, epi_use_sarampo1_expiration date
+	, epi_use_sarampo1_number_of_stockout_days integer
+	, epi_use_sarampo2_first_of_month integer
+	, epi_use_sarampo2_received integer
+	, epi_use_sarampo2_distributed integer
+	, epi_use_sarampo2_end_of_month integer
+	, epi_use_sarampo2_loss integer
+	, epi_use_sarampo2_expiration date
+	, epi_use_sarampo2_number_of_stockout_days integer
+	, epi_use_sarampo1diluent_first_of_month integer
+	, epi_use_sarampo1diluent_received integer
+	, epi_use_sarampo1diluent_distributed integer
+	, epi_use_sarampo1diluent_end_of_month integer
+	, epi_use_sarampo1diluent_loss integer
+	, epi_use_sarampo1diluent_expiration date
+	, epi_use_sarampo1diluent_number_of_stockout_days integer
+	, epi_use_sarampo2diluent_first_of_month integer
+	, epi_use_sarampo2diluent_received integer
+	, epi_use_sarampo2diluent_distributed integer
+	, epi_use_sarampo2diluent_end_of_month integer
+	, epi_use_sarampo2diluent_loss integer
+	, epi_use_sarampo2diluent_expiration date
+	, epi_use_sarampo2diluent_number_of_stockout_days integer
 	, adult_coverage_mif_community_tetanus1hc integer
 	, adult_coverage_mif_community_tetanus1mb integer
 	, adult_coverage_mif_community_tetanus25hc integer
@@ -221,6 +283,30 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, child_coverage_polio_target_group integer
 	, child_coverage_polio10_vials_opened integer
 	, child_coverage_polio20_vials_opened integer
+	, child_coverage_ipv_hc0_11 integer
+	, child_coverage_ipv_mb0_11 integer
+	, child_coverage_ipv_target_group integer
+	, child_coverage_ipv_vials_opened integer
+	, child_coverage_rotarix1_hc0_11 integer
+	, child_coverage_rotarix1_hc12_23 integer
+	, child_coverage_rotarix1_mb0_11 integer
+	, child_coverage_rotarix1_mb12_23 integer
+	, child_coverage_rotarix2_hc0_11 integer
+	, child_coverage_rotarix2_hc12_23 integer
+	, child_coverage_rotarix2_mb0_11 integer
+	, child_coverage_rotarix2_mb12_23 integer
+	, child_coverage_rotarix_target_group integer
+	, child_coverage_rotarix_vials_opened integer
+	, child_coverage_sarampo1_hc0_11 integer
+	, child_coverage_sarampo1_hc12_23 integer
+	, child_coverage_sarampo1_mb0_11 integer
+	, child_coverage_sarampo1_mb12_23 integer
+	, child_coverage_sarampo1_target_group integer
+	, child_coverage_sarampo1_vials_opened integer
+	, child_coverage_sarampo2_hc12_23 integer
+	, child_coverage_sarampo2_mb12_23 integer
+	, child_coverage_sarampo2_target_group integer
+	, child_coverage_sarampo2_vials_opened integer
 	, full_vaccinations_male_hc integer
 	, full_vaccinations_male_mb integer
 	, full_vaccinations_female_hc integer

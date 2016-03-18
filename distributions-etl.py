@@ -59,7 +59,7 @@ VRMIS_TABLE = 'vrmis'
 
 # Geo level name=>code that visit report record wants
 GEO_LEVEL = {'district': 'dist',
-	     'province': 'prov' }
+             'province': 'prov' }
 
 # Temporary changes for soldevelo-demo-db:
 #GEO_LEVEL = {'state': 'state',
@@ -93,12 +93,12 @@ VRMIS_SQL = """SELECT v.*
     JOIN %(periodTable)s period ON (v.period_id=period.id)
     WHERE period.startdate < '%(selvStartDate)s'
     ORDER BY f.id, period.startdate""" % \
-    {'vrmisTable': VRMIS_TABLE, 
-     'facTable': FACILITY_TABLE, 
-     'geoZoneTable': GEO_ZONE_TABLE, 
-     'dzTable': DZ_TABLE, 
-     'periodTable': PERIOD_TABLE,
-     'selvStartDate': SELV_START_DATE }
+            {'vrmisTable': VRMIS_TABLE,
+             'facTable': FACILITY_TABLE,
+             'geoZoneTable': GEO_ZONE_TABLE,
+             'dzTable': DZ_TABLE,
+             'periodTable': PERIOD_TABLE,
+             'selvStartDate': SELV_START_DATE }
 
 FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , f.code || '-' || to_char(period.startdate, 'YYYY-MM') AS visit_code
@@ -129,14 +129,14 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
     LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
     WHERE period.startdate >= '%(selvStartDate)s' """ % \
-    {'facilityVisitsTable': FACILITY_VISIT_TABLE,
-     'facilitiesTable': FACILITY_TABLE,
-     'fullCoveragesTable':  FULL_COVERAGE_TABLE,
-     'distributionsTable': DISTRIBUTION_TABLE,
-     'deliveryZonesTable': DZ_TABLE,
-     'periodsTable': PERIOD_TABLE,
-     'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE,
-     'selvStartDate': SELV_START_DATE}
+                     {'facilityVisitsTable': FACILITY_VISIT_TABLE,
+                      'facilitiesTable': FACILITY_TABLE,
+                      'fullCoveragesTable':  FULL_COVERAGE_TABLE,
+                      'distributionsTable': DISTRIBUTION_TABLE,
+                      'deliveryZonesTable': DZ_TABLE,
+                      'periodsTable': PERIOD_TABLE,
+                      'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE,
+                      'selvStartDate': SELV_START_DATE}
 
 
 GEO_ZONE_SQL = """ SELECT gz.id
@@ -144,20 +144,20 @@ GEO_ZONE_SQL = """ SELECT gz.id
     , gl.code AS geo_level_code
     FROM %(geoZoneTable)s AS gz
     JOIN %(geoLevelTable)s AS gl ON (gz.levelid=gl.id)""" % \
-    {'geoZoneTable': GEO_ZONE_TABLE, 'geoLevelTable': GEO_LEVEL_TABLE}
+               {'geoZoneTable': GEO_ZONE_TABLE, 'geoLevelTable': GEO_LEVEL_TABLE}
 
 
 EPI_INV_DISTINCT_CODE_SQL = """SELECT DISTINCT epiln.productcode
     FROM %(epiInvTable)s AS epiln""" % \
-    {'epiInvTable': EPI_INV_TABLE}
+                            {'epiInvTable': EPI_INV_TABLE}
 
 
 # Select all distinct epi inventory line item product group names
 EPI_USE_DISTINCT_CODE_SQL = """SELECT DISTINCT pg.code
     FROM %(epiUseTable)s AS euln
     JOIN %(productGroupTable)s AS pg ON (euln.productgroupid=pg.id)""" % \
-    {'epiUseTable': EPI_USE_TABLE, 
-    'productGroupTable': PRODUCT_GROUP_TABLE}
+                            {'epiUseTable': EPI_USE_TABLE,
+                             'productGroupTable': PRODUCT_GROUP_TABLE}
 
 
 # Select all epi use line items and associated product group code
@@ -172,26 +172,26 @@ EPI_USE_LINE_ITEM_SQL = """SELECT euli.facilityvisitid
     , euli.numberofstockoutdays AS number_of_stockout_days
     FROM %(epiUseTable)s AS euli
     JOIN %(productGroupTable)s AS pg ON (euli.productgroupid=pg.id)""" % \
-    {'epiUseTable': EPI_USE_TABLE, 
-     'productGroupTable': PRODUCT_GROUP_TABLE}
+                        {'epiUseTable': EPI_USE_TABLE,
+                         'productGroupTable': PRODUCT_GROUP_TABLE}
 
 
 # select distinct demographic group names as used in the adult coverage line item table
 ADULT_COV_DISTINCT_GROUP_SQL = """SELECT DISTINCT demographicgroup
     FROM %(adultCovTable)s""" % \
-    {'adultCovTable': ADULT_COVERAGE_TABLE}
+                               {'adultCovTable': ADULT_COVERAGE_TABLE}
 
 
 # select distinct vaccination (e.g. BCG, MEASLES) as used in child coveage line item table
 CHILD_COV_DISTINCT_VACC_SQL = """SELECT DISTINCT vaccination
     FROM %(childCovTable)s""" % \
-    {'childCovTable': CHILD_COVERAGE_TABLE}
+                              {'childCovTable': CHILD_COVERAGE_TABLE}
 
 
 # select distinct product vial names from the child coverage opened vial table
 CHILD_COV_DISTINCT_PRODUCT_VIAL_SQL = """SELECT DISTINCT productvialname
     FROM %(childCovOpenVialTable)s""" % \
-    {'childCovOpenVialTable': CHILD_COVERAGE_OPEN_VIAL_TABLE}
+                                      {'childCovOpenVialTable': CHILD_COVERAGE_OPEN_VIAL_TABLE}
 
 
 def loadRefTable(cursor, tableName):
@@ -213,11 +213,11 @@ def toUtf(string):
     if not isinstance(string, types.StringTypes): return string
     if isinstance(string, unicode): return string
     try:
-	asUtf8 = unicode(string, 'utf-8')
+        asUtf8 = unicode(string, 'utf-8')
     except:
-	print 'Failure to encode as utf-8: ' + string
-	print type(string)
-	raise
+        print 'Failure to encode as utf-8: ' + string
+        print type(string)
+        raise
     return asUtf8
 
 
@@ -229,24 +229,28 @@ def rowToTable(rowData, keyColumn, allowDupes = False):
     """
     table = dict()
     for row in rowData:
-	if keyColumn not in row:
-	    raise LookupError('Key column ' + keyColumn + ' not in row data: ' + str(rowData))
-	key = toUtf(row[keyColumn])
-	if allowDupes == False and row[keyColumn] in table:
-	    raise StandardError('Duplicate key ' + row[keyColumn] + ' found')
+        if keyColumn not in row:
+            raise LookupError('Key column ' + keyColumn + ' not in row data: ' + str(rowData))
+        key = toUtf(row[keyColumn])
+        if allowDupes == False and row[keyColumn] in table:
+            #print 'rowData :'
+            #print rowData
+            #print 'keyColumn '
+            #print keyColumn
+            raise StandardError('Duplicate key ' + row[keyColumn] + ' found')
 
-	# turn row dict into a dict with strings in utf
-	asDict = {}
-	for k,v in row.iteritems():
-	    if isinstance(v, basestring): v = toUtf(v)
-	    asDict[toUtf(k)] = v
+        # turn row dict into a dict with strings in utf
+        asDict = {}
+        for k,v in row.iteritems():
+            if isinstance(v, basestring): v = toUtf(v)
+            asDict[toUtf(k)] = v
 
-	# enter dict item into result dict that's keyed off the column given.  If
-	# an item already exists under that key, turn the value into a list of dicts.
-	if key in table:
-	    if not isinstance(table[key], list): table[key] = [table[key],]
-	    table[key].append(asDict)
-	else: table[key] = asDict
+        # enter dict item into result dict that's keyed off the column given.  If
+        # an item already exists under that key, turn the value into a list of dicts.
+        if key in table:
+            if not isinstance(table[key], list): table[key] = [table[key],]
+            table[key].append(asDict)
+        else: table[key] = asDict
 
     return table
 
@@ -260,7 +264,7 @@ def loadFields():
     f = open(FIELD_MAP, mode='rb')
     reader = csv.DictReader(f)
     for rowD in reader:
-	fieldNames.append(rowD['fieldname'])
+        fieldNames.append(rowD['fieldname'])
 
     f.close()
     return fieldNames
@@ -290,9 +294,9 @@ def loadEpiUseLineItems(conn):
     epiUseRows = loadAllFromSql(conn, EPI_USE_LINE_ITEM_SQL)
     # convert expiration date from string in db to datetime, not done in db to avoid db setting for datestyle
     for row in epiUseRows:
-	if 'expiration' in row and row['expiration'] is not None:
-	    row['expiration'] = datetime.strptime(row['expiration'], '%m/%Y').date()
-    
+        if 'expiration' in row and row['expiration'] is not None:
+            row['expiration'] = datetime.strptime(row['expiration'], '%m/%Y').date()
+
     return epiUseRows
 
 
@@ -319,6 +323,9 @@ def storeVisits(conn, visitRows, fields):
     # from fields
     valueTups = [tuple(visitD.get(fname) for fname in fields) for visitD in visitRows]
     colStr = '(' + ','.join(fname for fname in fields) + ')'
+
+    print 'colSrt: '
+    print colStr
 
     # create a value string that's SQL safe for every tuple we created, this allows the insert
     # statement later to be one statement, one column list and then a list of all the values/rows
@@ -372,7 +379,7 @@ def loadOpenLmis(conn):
     
     """
     if conn is None:
-	raise Exception("data source connection is not active")
+        raise Exception("data source connection is not active")
     cur = getDictCursor(conn)
 
     facilityTable = rowToTable( loadRefTable(cur, FACILITY_TABLE), 'id' )
@@ -436,15 +443,15 @@ def generateLastVisitDate(visitRows):
     # for every visit row, extract facility code, enter it into map where fac_code => last_visit_date
     lastVisitMap = dict()
     for row in rowsAsc:
-	mapKey = row['facility_id']
+        mapKey = row['facility_id']
 
-	# a) if no record in map exists, or value is None, last visit date for record is None
-	# b) if record in map exisits and is not None, last visit date for record is map value
-	# c) update map value with row's visit_date field if row's visit date is not None (i.e. only update for visits)
-	mapValue = lastVisitMap.get(mapKey)
-	row['visited_last_date'] = mapValue
-	if row['visited_date'] is not None:
-	    lastVisitMap[mapKey] = row['visited_date']
+        # a) if no record in map exists, or value is None, last visit date for record is None
+        # b) if record in map exisits and is not None, last visit date for record is map value
+        # c) update map value with row's visit_date field if row's visit date is not None (i.e. only update for visits)
+        mapValue = lastVisitMap.get(mapKey)
+        row['visited_last_date'] = mapValue
+        if row['visited_date'] is not None:
+            lastVisitMap[mapKey] = row['visited_date']
 
 
 def geoZoneFlatten(geoZone, geoZoneTable):
@@ -454,8 +461,8 @@ def geoZoneFlatten(geoZone, geoZoneTable):
     """
     gz = {}
     while geoZone is not None:
-	gz[geoZone['geo_level_code']] = geoZone
-	geoZone = geoZoneTable.get(geoZone['parentid'])
+        gz[geoZone['geo_level_code']] = geoZone
+        geoZone = geoZoneTable.get(geoZone['parentid'])
 
     return gz
 
@@ -469,8 +476,8 @@ def facilityAddGeoLevels(fac, geoZoneTable):
     geoZoneFirst = geoZoneTable.get(fac['geographiczoneid'])
     geoFlat = geoZoneFlatten(geoZoneFirst, geoZoneTable)
     for geoLevelName, geoLevelCode in GEO_LEVEL.iteritems():
-	for geoK, geoV in geoFlat.get(geoLevelCode).iteritems():
-	    fac[geoLevelName + '_' + geoK] = geoV
+        for geoK, geoV in geoFlat.get(geoLevelCode).iteritems():
+            fac[geoLevelName + '_' + geoK] = geoV
 
     return fac # allows inline use
 
@@ -481,9 +488,9 @@ def dictColCopy(fromDict, toDict, keyList):
     """
 
     for key in keyList:
-	if key not in fromDict:
-	    raise Exception('Key ' + key + ' not found in: ' + str(fromDict))
-	toDict[key] = fromDict[key]
+        if key not in fromDict:
+            raise Exception('Key ' + key + ' not found in: ' + str(fromDict))
+        toDict[key] = fromDict[key]
 
 
 def getDictCursor(conn):
@@ -505,7 +512,7 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
     #cols = ['existingquantity', 'spoiledquantity', 'deliveredquantity', 'idealquantity', 'idealquantitybypacksize']
 
     keyColName = 'productcode'
-    
+
     # pivot the line items into a column structure
     def rename(origColName): # a function that the pivoted column names will be renamed with
         newColName = re.sub(r'quantity', '', origColName) #replace 'quantity' with '' within origColName
@@ -519,99 +526,111 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
 
 def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
     """
-    Given a list of the facility visits, the epi use line items as a table, 
-    and a list of distinct epi product codes, will map those epi line items to columns 
+    Given a list of the facility visits, the epi use line items as a table,
+    and a list of distinct epi product codes, will map those epi line items to columns
     into the facility visit row.
     """
-    
+
     cols = ['first_of_month', 'received', 'distributed', 'loss', 'end_of_month', 'expiration', 'number_of_stockout_days']
     keyColName = 'product_code'
     def rename(origColName): # a function that the pivoted column names will be renamed with
-	newColName = re.sub('1bcg', 'bcg', origColName)
-	newColName = re.sub('2bcgdil', 'bcgdil', newColName)
-	newColName = re.sub('3polio', 'polio', newColName)
-	newColName = re.sub('4penta', 'penta', newColName)
-	newColName = re.sub('5measles', 'measles', newColName)
-	newColName = re.sub('6measlesdil', 'measlesdil', newColName)
-	newColName = re.sub('7pcv10', 'pcv', newColName)
-	newColName = re.sub('8hpv', 'hpv', newColName)
-	newColName = re.sub('9tetanus', 'tetanus', newColName)
-	return 'epi_use_' + newColName
+        newColName = re.sub('1bcg', 'bcg', origColName)
+        newColName = re.sub('2bcgdil', 'bcgdil', newColName)
+        newColName = re.sub('3polio', 'polio', newColName)
+        newColName = re.sub('4penta', 'penta', newColName)
+        newColName = re.sub('5measles', 'measles', newColName)
+        newColName = re.sub('6measlesdil', 'measlesdil', newColName)
+        newColName = re.sub('7pcv10', 'pcv', newColName)
+        newColName = re.sub('8hpv', 'hpv', newColName)
+        newColName = re.sub('9tetanus', 'tetanus', newColName)
+        return 'epi_use_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiUseTable, keyColName, epiUseProdCodes, cols, rename)
 
 
 def mapAdultCoverageToFacVisits(facVisitRows, adultCovTable, adultCovDemographicGroups):
     """
-    Given a list of the facility visits, the adult vaccination line items as a table, 
-    and a list of distinct adult coverage demographic groups, will map those items to columns 
+    Given a list of the facility visits, the adult vaccination line items as a table,
+    and a list of distinct adult coverage demographic groups, will map those items to columns
     into the facility visit row.
     """
-    
+
     cols = ['healthcentertetanus1', 'outreachtetanus1', 'healthcentertetanus2to5', 'outreachtetanus2to5', 'targetgroup']
     keyColName = 'demographicgroup'
     def rename(origColName): # a function that the pivoted column names will be renamed with
-	newColName = re.sub('MIF 15-49 years - Students', 'mif_student', origColName)
-	newColName = re.sub('MIF 15-49 years - Community', 'mif_community', newColName)
-	newColName = re.sub('MIF 15-49 years - Workers', 'mif_worker', newColName)
-	newColName = re.sub('Students not MIF', 'student', newColName)
-	newColName = re.sub('Other not MIF', 'other', newColName)
-	newColName = re.sub('Workers not MIF', 'worker', newColName)
-	newColName = re.sub('Pregnant Women', 'pregnant', newColName)
-	newColName = re.sub('healthcentertetanus1', 'tetanus1hc', newColName)
-	newColName = re.sub('outreachtetanus1', 'tetanus1mb', newColName)
-	newColName = re.sub('healthcentertetanus2to5', 'tetanus25hc', newColName)
-	newColName = re.sub('outreachtetanus2to5', 'tetanus25mb', newColName)
-	newColName = re.sub('targetgroup', 'target_group', newColName)
-	return 'adult_coverage_' + newColName
+        newColName = re.sub('MIF 15-49 years - Students', 'mif_student', origColName)
+        newColName = re.sub('MIF 15-49 years - Community', 'mif_community', newColName)
+        newColName = re.sub('MIF 15-49 years - Workers', 'mif_worker', newColName)
+        newColName = re.sub('Students not MIF', 'student', newColName)
+        newColName = re.sub('Other not MIF', 'other', newColName)
+        newColName = re.sub('Workers not MIF', 'worker', newColName)
+        newColName = re.sub('Pregnant Women', 'pregnant', newColName)
+        newColName = re.sub('healthcentertetanus1', 'tetanus1hc', newColName)
+        newColName = re.sub('outreachtetanus1', 'tetanus1mb', newColName)
+        newColName = re.sub('healthcentertetanus2to5', 'tetanus25hc', newColName)
+        newColName = re.sub('outreachtetanus2to5', 'tetanus25mb', newColName)
+        newColName = re.sub('targetgroup', 'target_group', newColName)
+        return 'adult_coverage_' + newColName
     mapLineItemsToFacVisits(facVisitRows, adultCovTable, keyColName, adultCovDemographicGroups, cols, rename)
 
 
 def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
     """
-    Given a list of the facility visits, the child coverage line items as a table, 
-    and a list of distinct child coverage vaccinations, will map those line items to columns 
+    Given a list of the facility visits, the child coverage line items as a table,
+    and a list of distinct child coverage vaccinations, will map those line items to columns
     into the facility visit row.
     """
-    
+
+    #print 'facVisitRows'
+    #print facVisitRows
+    #print 'childCovTable'
+    #print childCovTable
+    #print 'childCovVaccs'
+    #print childCovVaccs
+
     cols = ['healthcenter11months', 'outreach11months', 'healthcenter23months', 'outreach23months', 'targetgroup']
     keyColName = 'vaccination'
     def rename(origColName): # a function that the pivoted column names will be renamed with
-	newColName = re.sub('BCG', 'bcg', origColName)
-	newColName = re.sub('Measles', 'measles', newColName)
-	newColName = re.sub('PCV10 ', 'pcv', newColName)
-	newColName = re.sub('Penta ', 'penta', newColName)
-	newColName = re.sub('Polio ', 'polio', newColName)
-	newColName = re.sub('\(Newborn\)', '0', newColName)
-	newColName = re.sub('1st dose', '1', newColName)
-	newColName = re.sub('2nd dose', '2', newColName)
-	newColName = re.sub('3rd dose', '3', newColName)
-	newColName = re.sub('healthcenter', 'hc', newColName)
-	newColName = re.sub('outreach', 'mb', newColName)
-	newColName = re.sub('11months', '0_11', newColName)
-	newColName = re.sub('23months', '12_23', newColName)
-	newColName = re.sub('(.+)\d+_targetgroup', r'\1_targetgroup', newColName) # fix things like polio2_targetgroup to be just polio_targetgroup
-	newColName = re.sub('targetgroup', 'target_group', newColName)
-	return 'child_coverage_' + newColName
+        newColName = re.sub('BCG', 'bcg', origColName)
+        newColName = re.sub('Measles', 'measles', newColName)
+        newColName = re.sub('PCV10 ', 'pcv', newColName)
+        newColName = re.sub('Penta ', 'penta', newColName)
+        newColName = re.sub('Polio ', 'polio', newColName)
+        newColName = re.sub('RV Rotarix', 'rotarix', newColName)
+        newColName = re.sub('Sarampo', 'sarampo', newColName)
+        newColName = re.sub('IPV', 'ipv', newColName)
+        newColName = re.sub('\(Newborn\)', '0', newColName)
+        newColName = re.sub('1st dose', '1', newColName)
+        newColName = re.sub('2nd dose', '2', newColName)
+        newColName = re.sub('3rd dose', '3', newColName)
+        newColName = re.sub('1a dose', '1', newColName)
+        newColName = re.sub('2a dose', '2', newColName)
+        newColName = re.sub('healthcenter', 'hc', newColName)
+        newColName = re.sub('outreach', 'mb', newColName)
+        newColName = re.sub('11months', '0_11', newColName)
+        newColName = re.sub('23months', '12_23', newColName)
+        newColName = re.sub('(.+)\d+_targetgroup', r'\1_targetgroup', newColName) # fix things like polio2_targetgroup to be just polio_targetgroup
+        newColName = re.sub('targetgroup', 'target_group', newColName)
+        return 'child_coverage_' + newColName
     mapLineItemsToFacVisits(facVisitRows, childCovTable, keyColName, childCovVaccs, cols, rename)
 
 
 def mapChildCoverageOpenVialsToFacVisits(facVisitRows, childCovOpenVialsTable, childCovProductVialNames):
     """
-    Given a list of the facility visits, the child coverage opened vial line items as a table, 
-    and a list of distinct child coverage product vial names, will map those line items to columns 
+    Given a list of the facility visits, the child coverage opened vial line items as a table,
+    and a list of distinct child coverage product vial names, will map those line items to columns
     into the facility visit row.
     """
-    
+
     cols = ['openedvials']
     keyColName = 'productvialname'
     def rename(origColName): # a function that the pivoted column names will be renamed with
-	newColName = re.sub('BCG', 'bcg', origColName)
-	newColName = re.sub('Measles', 'measles', newColName)
-	newColName = re.sub('PCV', 'pcv', newColName)
-	newColName = re.sub('Penta', 'penta', newColName)
-	newColName = re.sub('Polio', 'polio', newColName)
-	newColName = re.sub('openedvials', 'vials_opened', newColName)
-	return 'child_coverage_' + newColName
+        newColName = re.sub('BCG', 'bcg', origColName)
+        newColName = re.sub('Measles', 'measles', newColName)
+        newColName = re.sub('PCV', 'pcv', newColName)
+        newColName = re.sub('Penta', 'penta', newColName)
+        newColName = re.sub('Polio', 'polio', newColName)
+        newColName = re.sub('openedvials', 'vials_opened', newColName)
+        return 'child_coverage_' + newColName
     mapLineItemsToFacVisits(facVisitRows, childCovOpenVialsTable, keyColName, childCovProductVialNames, cols, rename)
 
 
@@ -634,12 +653,12 @@ def mapLineItemsToFacVisits(facVisitRows, lineItemTable, keyColName, distinctCod
     """
     # pivot the line items to a col structure
     pivot = pivotLineItems(lineItemTable, keyColName, distinctCodeList, desiredCols, colRename = colRenameFn)
-    
+
     def copyLineItemsToFacVisit(facVisitD):
-	fvId = facVisitD['id']
-	dictColCopy(pivot[fvId], facVisitD, pivot[fvId].keys())
-    map(copyLineItemsToFacVisit, facVisitRows) 
-    
+        fvId = facVisitD['id']
+        dictColCopy(pivot[fvId], facVisitD, pivot[fvId].keys())
+    map(copyLineItemsToFacVisit, facVisitRows)
+
 
 def pivotLineItems(itemTable, keyColName, keyColValues, columns, colRename = None):
     """
@@ -664,36 +683,36 @@ def pivotLineItems(itemTable, keyColName, keyColValues, columns, colRename = Non
     """
 
     if columns is None: return itemTable
-    
+
     # loop through line item table, for every key we look at the line items for that key
     pivotD = {} # holds the resulting pivot table
     for liKey, liValue in itemTable.iteritems():
-	liDict = {}
-	if not isinstance(liValue, list): liValue = [liValue,]
-	liAsTable = rowToTable(liValue, keyColName)
+        liDict = {}
+        if not isinstance(liValue, list): liValue = [liValue,]
+        liAsTable = rowToTable(liValue, keyColName)
 
-	# look through every combination of given key column values and given columns,
-	# constructing a dict that has columns of keyColumnValue_columns
-	for kcVal in keyColValues:
-	    for col in columns:
-		lineItem = liAsTable.get(kcVal)
-		theVal = lineItem.get(col) if lineItem is not None else None
-		colName = kcVal + '_' + col
-		if colRename is not None: 
-		    colName = colRename(colName)
-		liDict[colName] = theVal
-		
-	pivotD[liKey] = liDict
+        # look through every combination of given key column values and given columns,
+        # constructing a dict that has columns of keyColumnValue_columns
+        for kcVal in keyColValues:
+            for col in columns:
+                lineItem = liAsTable.get(kcVal)
+                theVal = lineItem.get(col) if lineItem is not None else None
+                colName = kcVal + '_' + col
+                if colRename is not None:
+                    colName = colRename(colName)
+                liDict[colName] = theVal
+
+        pivotD[liKey] = liDict
 
     return pivotD
 
 
 def printMissingFieldNames(visitRows, fieldNames):
     for row in visitRows:
-	for fname in fieldNames:
-	    if fname not in row:
-		print 'Missing field name: ' + fname + ' from row with key: ' + row['visit_code']
- 
+        for fname in fieldNames:
+            if fname not in row:
+                print 'Missing field name: ' + fname + ' from row with key: ' + row['visit_code']
+
 
 dbConn = None
 try:
@@ -717,8 +736,8 @@ try:
     print "SelvData has completed"
 except BaseException, err:
     if dbConn is not None:
-	dbConn.rollback()
-    raise 
+        dbConn.rollback()
+    raise
 finally:
     if dbConn is not None:
-	dbConn.close()
+        dbConn.close()
