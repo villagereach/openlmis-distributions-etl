@@ -27,6 +27,7 @@ DB_NAME = 'open_lmis'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = "postgres"
+PASSWORD = "p@ssw0rd"
 
 # table names
 ADULT_COVERAGE_TABLE = 'vaccination_adult_coverage_line_items'
@@ -120,7 +121,11 @@ EPI_USE_LINE_ITEM_SQL = """SELECT euli.facilityvisitid
     , euli.expirationdate AS expiration
     , euli.received
     , euli.distributed
-    , euli.loss
+    , euli.lossother AS loss_other
+    , euli.lossoverheated AS loss_overheated
+    , euli.lossfrozen AS loss_frozen
+    , euli.lossexpired AS loss_expired
+    , euli.numberofstockoutdays AS number_of_stockout_days
     FROM %(epiUseTable)s AS euli
     JOIN %(productGroupTable)s AS pg ON (euli.productgroupid=pg.id)""" % \
     {'epiUseTable': EPI_USE_TABLE, 
@@ -443,7 +448,7 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
     into the facility visit row.
     """
 
-    cols = ['existingquantity', 'spoiledquantity', 'deliveredquantity', 'idealquantity']
+    cols = ['existingquantity', 'spoiledquantity', 'deliveredquantity', 'idealquantity', 'packsize']
     keyColName = 'productcode'
     
     # pivot the line items into a column structure
@@ -638,7 +643,7 @@ def printMissingFieldNames(visitRows, fieldNames):
 
 dbConn = None
 try:
-    dbConn = psycopg2.connect(host=DB_HOST, port=DB_PORT, database=DB_NAME, user=DB_USER)
+    dbConn = psycopg2.connect(host=DB_HOST, port=DB_PORT, database=DB_NAME, user=DB_USER, password=PASSWORD)
 
     # load open lmis facility visit rows
     facVisitRows = loadOpenLmis(dbConn)
