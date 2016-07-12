@@ -458,6 +458,7 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
 	newColName = re.sub(r'bcg20', 'bcg', newColName)
 	newColName = re.sub(r'measles10', 'measles', newColName)
 	newColName = re.sub(r'tetanus10', 'tetanus', newColName)
+	newColName = re.sub(r'vpi5', 'vpi', newColName)
 	newColName = re.sub(r'yfv1', 'hpv2', newColName)
 	return 'epi_inventory_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiInvTable, keyColName, epiInvProdCodes, cols, rename)
@@ -469,8 +470,8 @@ def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
     and a list of distinct epi product codes, will map those epi line items to columns 
     into the facility visit row.
     """
-    
-    cols = ['first_of_month', 'received', 'distributed', 'loss', 'end_of_month', 'expiration']
+
+    cols = ['lossother' , 'first_of_month' , 'end_of_month' , 'expiration' , 'received' , 'distributed' , 'loss_other' , 'loss_overheated' , 'loss_frozen' , 'loss_expired' , 'number_of_stockout_days' ]
     keyColName = 'product_code'
     def rename(origColName): # a function that the pivoted column names will be renamed with
 	newColName = re.sub('1bcg', 'bcg', origColName)
@@ -482,6 +483,7 @@ def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
 	newColName = re.sub('4pcv10', 'pcv', newColName)
 	newColName = re.sub('6yfv', 'hpv', newColName)
 	newColName = re.sub('8tetanus', 'tetanus', newColName)
+	newColName = re.sub('vpi5', 'vpi', newColName)
 	return 'epi_use_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiUseTable, keyColName, epiUseProdCodes, cols, rename)
 
@@ -523,6 +525,8 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
     keyColName = 'vaccination'
     def rename(origColName): # a function that the pivoted column names will be renamed with
 	newColName = re.sub('BCG', 'bcg', origColName)
+	newColName = re.sub('VPI', 'vpi', newColName)
+	newColName = re.sub('IPV', 'vpi', newColName) #IPV and VPI are synonymous
 	newColName = re.sub('Measles', 'measles', newColName)
 	newColName = re.sub('PCV10 ', 'pcv', newColName)
 	newColName = re.sub('Penta ', 'penta', newColName)
@@ -552,6 +556,8 @@ def mapChildCoverageOpenVialsToFacVisits(facVisitRows, childCovOpenVialsTable, c
     keyColName = 'productvialname'
     def rename(origColName): # a function that the pivoted column names will be renamed with
 	newColName = re.sub('BCG', 'bcg', origColName)
+	newColName = re.sub('VPI', 'vpi', origColName)
+	newColName = re.sub('IPV', 'vpi', origColName) #IPV and VPI are synonymous
 	newColName = re.sub('Measles', 'measles', newColName)
 	newColName = re.sub('PCV', 'pcv', newColName)
 	newColName = re.sub('Penta', 'penta', newColName)
