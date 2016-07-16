@@ -17,6 +17,9 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, confirmed_by_name text
 	, confirmed_by_title text
 	, catchement_population integer
+	, had_stockouts boolean
+	, has_additional_product_sources boolean
+	, stock_cards_up_to_date boolean
 	, epi_inventory_bcg_spoiled integer
 	, epi_inventory_bcg_existing integer
 	, epi_inventory_bcg_delivered integer
@@ -291,4 +294,8 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, stockout_cause_transfered_another_facility boolean
 	, stockout_cause_other_reason boolean
 	, stockout_cause_description text
+	, additional_product_source_another_health_facility boolean
+	, additional_product_source_zonal_warehouse boolean
+	, additional_product_source_other boolean
+	, additional_product_source_other_description text
 );

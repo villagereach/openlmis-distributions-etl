@@ -48,7 +48,7 @@ PERIOD_TABLE = 'processing_periods'
 PRODUCT_TABLE = 'products'
 PRODUCT_GROUP_TABLE = 'product_groups'
 STOCKOUT_CAUSES_TABLE = 'stockout_causes'
-
+ADDITIONAL_PRODUCT_SOURCES_TABLE = 'additional_product_sources'
 
 # Geo level name=>code that visit report record wants
 GEO_LEVEL = {'district': 'commune',
@@ -69,6 +69,9 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , fv.otherreasondescription AS no_visit_other_reason
     , fv.observations
     , fv.facilitycatchmentpopulation AS catchement_population
+    , fv.stockouts AS had_stockouts
+    , fv.hasAdditionalProductSources AS has_additional_product_sources
+    , fv.stockCardsUpToDate AS stock_cards_up_to_date
     , period.id as period_id
     , dz.id AS delivery_zone_id
     , fc.femalehealthcenter AS full_vaccinations_female_hc
@@ -83,6 +86,10 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , sct.productsTransferedAnotherFacility AS stockout_cause_transfered_another_facility
     , sct.other AS stockout_cause_other_reason
     , sct.stockoutCausesOther AS stockout_cause_description
+    , apst.anotherHealthFacility AS additional_product_source_another_health_facility
+    , apst.zonalWarehouse AS additional_product_source_zonal_warehouse
+    , apst.other AS additional_product_source_other
+    , apst.additionalProductSourcesOther AS additional_product_source_other_description
     FROM %(facilityVisitsTable)s AS fv
     JOIN %(facilitiesTable)s AS f ON (fv.facilityid=f.id)
     JOIN %(distributionsTable)s AS d ON (fv.distributionid=d.id)
@@ -90,6 +97,7 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
     JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
     JOIN %(stockoutCausesTable)s AS sct ON (sct.facilityvisitid=fv.id)
+    JOIN %(additionalProductSourcesTable)s AS apst ON (apst.facilityvisitid=fv.id)
     LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
     WHERE period.startdate >= '2014-04-01'""" % \
      {'facilityVisitsTable': FACILITY_VISIT_TABLE,
@@ -99,7 +107,8 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
       'deliveryZonesTable': DZ_TABLE,
       'periodsTable': PERIOD_TABLE,
       'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE,
-      'stockoutCausesTable': STOCKOUT_CAUSES_TABLE}
+      'stockoutCausesTable': STOCKOUT_CAUSES_TABLE,
+      'additionalProductSourcesTable': ADDITIONAL_PRODUCT_SOURCES_TABLE}
 
 
 GEO_ZONE_SQL = """ SELECT gz.id
