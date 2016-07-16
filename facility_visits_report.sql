@@ -1,4 +1,4 @@
-DROP TABLE facility_visits_report;
+DROP TABLE IF EXISTS facility_visits_report;
 CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, visit_code text NOT NULL unique
 	, facility_id integer NOT NULL references facilities(id)
@@ -21,46 +21,62 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_inventory_bcg_existing integer
 	, epi_inventory_bcg_delivered integer
 	, epi_inventory_bcg_isa integer
+	, epi_inventory_bcg_packsize integer
 	, epi_inventory_bcgdil_spoiled integer
 	, epi_inventory_bcgdil_existing integer
 	, epi_inventory_bcgdil_delivered integer
 	, epi_inventory_bcgdil_isa integer
+	, epi_inventory_bcgdil_packsize integer
 	, epi_inventory_polio10_spoiled integer
 	, epi_inventory_polio10_existing integer
 	, epi_inventory_polio10_delivered integer
 	, epi_inventory_polio10_isa integer
+	, epi_inventory_polio10_packsize integer
 	, epi_inventory_polio20_spoiled integer
 	, epi_inventory_polio20_existing integer
 	, epi_inventory_polio20_delivered integer
 	, epi_inventory_polio20_isa integer
+	, epi_inventory_polio20_packsize integer
 	, epi_inventory_penta1_spoiled integer
 	, epi_inventory_penta1_existing integer
 	, epi_inventory_penta1_delivered integer
 	, epi_inventory_penta1_isa integer
+	, epi_inventory_penta1_packsize integer
 	, epi_inventory_penta10_spoiled integer
 	, epi_inventory_penta10_existing integer
 	, epi_inventory_penta10_delivered integer
 	, epi_inventory_penta10_isa integer
+	, epi_inventory_penta10_packsize integer
 	, epi_inventory_pcv10_spoiled integer
 	, epi_inventory_pcv10_existing integer
 	, epi_inventory_pcv10_delivered integer
 	, epi_inventory_pcv10_isa integer
+	, epi_inventory_pcv10_packsize integer
 	, epi_inventory_hpv2_spoiled integer
 	, epi_inventory_hpv2_existing integer
 	, epi_inventory_hpv2_delivered integer
 	, epi_inventory_hpv2_isa integer
+	, epi_inventory_hpv2_packsize integer
 	, epi_inventory_measles_spoiled integer
 	, epi_inventory_measles_existing integer
 	, epi_inventory_measles_delivered integer
 	, epi_inventory_measles_isa integer
+	, epi_inventory_measles_packsize integer
 	, epi_inventory_measlesdil_spoiled integer
 	, epi_inventory_measlesdil_existing integer
 	, epi_inventory_measlesdil_delivered integer
 	, epi_inventory_measlesdil_isa integer
+	, epi_inventory_measlesdil_packsize integer
 	, epi_inventory_tetanus_spoiled integer
 	, epi_inventory_tetanus_existing integer
 	, epi_inventory_tetanus_delivered integer
 	, epi_inventory_tetanus_isa integer
+	, epi_inventory_tetanus_packsize integer
+	, epi_inventory_vpi_spoiled integer
+	, epi_inventory_vpi_existing integer
+	, epi_inventory_vpi_delivered integer
+	, epi_inventory_vpi_isa integer
+	, epi_inventory_vpi_packsize integer
 	, epi_inventory_gas_existing integer
 	, epi_inventory_gas_delivered integer
 	, epi_inventory_gas_isa integer
@@ -79,57 +95,103 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_use_bcg_first_of_month integer
 	, epi_use_bcg_received integer
 	, epi_use_bcg_distributed integer
-	, epi_use_bcg_loss integer
+	, epi_use_bcg_loss_other integer
+	, epi_use_bcg_loss_overheated integer
+	, epi_use_bcg_loss_frozen integer
+	, epi_use_bcg_loss_expired integer
 	, epi_use_bcg_end_of_month integer
 	, epi_use_bcg_expiration date
+	, epi_use_bcg_number_of_stockout_days integer
 	, epi_use_bcgdil_first_of_month integer
 	, epi_use_bcgdil_received integer
 	, epi_use_bcgdil_distributed integer
-	, epi_use_bcgdil_loss integer
+	, epi_use_bcgdil_loss_other integer
+	, epi_use_bcgdil_loss_overheated integer
+	, epi_use_bcgdil_loss_frozen integer
+	, epi_use_bcgdil_loss_expired integer
 	, epi_use_bcgdil_end_of_month integer
 	, epi_use_bcgdil_expiration date
+	, epi_use_bcgdil_number_of_stockout_days integer
 	, epi_use_polio_first_of_month integer
 	, epi_use_polio_received integer
 	, epi_use_polio_distributed integer
-	, epi_use_polio_loss integer
+	, epi_use_polio_loss_other integer
+	, epi_use_polio_loss_overheated integer
+	, epi_use_polio_loss_frozen integer
+	, epi_use_polio_loss_expired integer
 	, epi_use_polio_end_of_month integer
 	, epi_use_polio_expiration date
+	, epi_use_polio_number_of_stockout_days integer
 	, epi_use_penta_first_of_month integer
 	, epi_use_penta_received integer
 	, epi_use_penta_distributed integer
-	, epi_use_penta_loss integer
+	, epi_use_penta_loss_other integer
+	, epi_use_penta_loss_overheated integer
+	, epi_use_penta_loss_frozen integer
+	, epi_use_penta_loss_expired integer
 	, epi_use_penta_end_of_month integer
 	, epi_use_penta_expiration date
+	, epi_use_penta_number_of_stockout_days integer
 	, epi_use_pcv_first_of_month integer
 	, epi_use_pcv_received integer
 	, epi_use_pcv_distributed integer
-	, epi_use_pcv_loss integer
+	, epi_use_pcv_loss_other integer
+	, epi_use_pcv_loss_overheated integer
+	, epi_use_pcv_loss_frozen integer
+	, epi_use_pcv_loss_expired integer
 	, epi_use_pcv_end_of_month integer
 	, epi_use_pcv_expiration date
+	, epi_use_pcv_number_of_stockout_days integer
 	, epi_use_hpv_first_of_month integer
 	, epi_use_hpv_received integer
 	, epi_use_hpv_distributed integer
-	, epi_use_hpv_loss integer
+	, epi_use_hpv_loss_other integer
+	, epi_use_hpv_loss_overheated integer
+	, epi_use_hpv_loss_frozen integer
+	, epi_use_hpv_loss_expired integer
 	, epi_use_hpv_end_of_month integer
 	, epi_use_hpv_expiration date
+	, epi_use_hpv_number_of_stockout_days integer
 	, epi_use_measles_first_of_month integer
 	, epi_use_measles_received integer
 	, epi_use_measles_distributed integer
-	, epi_use_measles_loss integer
+	, epi_use_measles_loss_other integer
+	, epi_use_measles_loss_overheated integer
+	, epi_use_measles_loss_frozen integer
+	, epi_use_measles_loss_expired integer
 	, epi_use_measles_end_of_month integer
 	, epi_use_measles_expiration date
+	, epi_use_measles_number_of_stockout_days integer
 	, epi_use_measlesdil_first_of_month integer
 	, epi_use_measlesdil_received integer
 	, epi_use_measlesdil_distributed integer
-	, epi_use_measlesdil_loss integer
+	, epi_use_measlesdil_loss_other integer
+	, epi_use_measlesdil_loss_overheated integer
+	, epi_use_measlesdil_loss_frozen integer
+	, epi_use_measlesdil_loss_expired integer
 	, epi_use_measlesdil_end_of_month integer
 	, epi_use_measlesdil_expiration date
+	, epi_use_measlesdil_number_of_stockout_days integer
 	, epi_use_tetanus_first_of_month integer
 	, epi_use_tetanus_received integer
 	, epi_use_tetanus_distributed integer
 	, epi_use_tetanus_end_of_month integer
-	, epi_use_tetanus_loss integer
+	, epi_use_tetanus_loss_other integer
+	, epi_use_tetanus_loss_overheated integer
+	, epi_use_tetanus_loss_frozen integer
+	, epi_use_tetanus_loss_expired integer
 	, epi_use_tetanus_expiration date
+	, epi_use_tetanus_number_of_stockout_days integer
+	, epi_use_vpi_first_of_month integer
+	, epi_use_vpi_received integer
+	, epi_use_vpi_distributed integer
+	, epi_use_vpi_end_of_month integer
+	, epi_use_vpi_loss_other integer
+	, epi_use_vpi_loss_overheated integer
+	, epi_use_vpi_loss_frozen integer
+	, epi_use_vpi_loss_expired integer
+	, epi_use_vpi_expiration date
+	, epi_use_vpi_number_of_stockout_days integer
 	, adult_coverage_mif_community_tetanus1hc integer
 	, adult_coverage_mif_community_tetanus1mb integer
 	, adult_coverage_mif_community_tetanus25hc integer
@@ -160,6 +222,12 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, child_coverage_bcg_mb12_23 integer
 	, child_coverage_bcg_target_group integer
 	, child_coverage_bcg_vials_opened integer
+	, child_coverage_vpi_hc0_11 integer
+	, child_coverage_vpi_hc12_23 integer
+	, child_coverage_vpi_mb0_11 integer
+	, child_coverage_vpi_mb12_23 integer
+	, child_coverage_vpi_target_group integer
+	, child_coverage_vpi_vials_opened integer
 	, child_coverage_measles_hc0_11 integer
 	, child_coverage_measles_hc12_23 integer
 	, child_coverage_measles_mb0_11 integer
@@ -216,4 +284,11 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, full_vaccinations_male_mb integer
 	, full_vaccinations_female_hc integer
 	, full_vaccinations_female_mb integer
+	, stockout_cause_coldchain_equipment_failure boolean
+	, stockout_cause_incorrect_estimation_needs boolean
+	, stockout_cause_stockout_zonal_warehouse boolean
+	, stockout_cause_delivery_not_on_time boolean
+	, stockout_cause_transfered_another_facility boolean
+	, stockout_cause_other_reason boolean
+	, stockout_cause_description text
 );
