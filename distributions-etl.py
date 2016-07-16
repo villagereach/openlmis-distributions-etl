@@ -47,11 +47,12 @@ GEO_LEVEL_TABLE = 'geographic_levels'
 PERIOD_TABLE = 'processing_periods'
 PRODUCT_TABLE = 'products'
 PRODUCT_GROUP_TABLE = 'product_groups'
+STOCKOUT_CAUSES_TABLE = 'stockout_causes'
 
 
 # Geo level name=>code that visit report record wants
 GEO_LEVEL = {'district': 'commune',
-	     'province': 'dept' }
+             'province': 'dept' }
 
 
 FACILITY_VISIT_SQL = """SELECT fv.id AS id
@@ -75,21 +76,30 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , fc.malehealthcenter AS full_vaccinations_male_hc
     , fc.maleoutreach AS full_vaccinations_male_mb
     , acov.openedvials AS adult_coverage_tetanus_vials_opened
+    , sct.coldChainEquipmentFailure AS stockout_cause_coldchain_equipment_failure
+    , sct.incorrectEstimationNeeds AS stockout_cause_incorrect_estimation_needs
+    , sct.stockoutZonalWarehouse AS stockout_cause_stockout_zonal_warehouse
+    , sct.deliveryNotOnTime AS stockout_cause_delivery_not_on_time
+    , sct.productsTransferedAnotherFacility AS stockout_cause_transfered_another_facility
+    , sct.other AS stockout_cause_other_reason
+    , sct.stockoutCausesOther AS stockout_cause_description
     FROM %(facilityVisitsTable)s AS fv
     JOIN %(facilitiesTable)s AS f ON (fv.facilityid=f.id)
     JOIN %(distributionsTable)s AS d ON (fv.distributionid=d.id)
     JOIN %(deliveryZonesTable)s AS dz on (d.deliveryzoneid=dz.id)
     JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
     JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
+    JOIN %(stockoutCausesTable)s AS sct ON (sct.facilityvisitid=fv.id)
     LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
     WHERE period.startdate >= '2014-04-01'""" % \
-    {'facilityVisitsTable': FACILITY_VISIT_TABLE,
-     'facilitiesTable': FACILITY_TABLE,
-     'fullCoveragesTable':  FULL_COVERAGE_TABLE,
-     'distributionsTable': DISTRIBUTION_TABLE,
-     'deliveryZonesTable': DZ_TABLE,
-     'periodsTable': PERIOD_TABLE,
-     'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE}
+     {'facilityVisitsTable': FACILITY_VISIT_TABLE,
+      'facilitiesTable': FACILITY_TABLE,
+      'fullCoveragesTable':  FULL_COVERAGE_TABLE,
+      'distributionsTable': DISTRIBUTION_TABLE,
+      'deliveryZonesTable': DZ_TABLE,
+      'periodsTable': PERIOD_TABLE,
+      'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE,
+      'stockoutCausesTable': STOCKOUT_CAUSES_TABLE}
 
 
 GEO_ZONE_SQL = """ SELECT gz.id
