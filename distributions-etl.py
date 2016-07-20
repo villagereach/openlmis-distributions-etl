@@ -91,13 +91,13 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , apst.other AS additional_product_source_other
     , apst.additionalProductSourcesOther AS additional_product_source_other_description
     FROM %(facilityVisitsTable)s AS fv
-    JOIN %(facilitiesTable)s AS f ON (fv.facilityid=f.id)
-    JOIN %(distributionsTable)s AS d ON (fv.distributionid=d.id)
-    JOIN %(deliveryZonesTable)s AS dz on (d.deliveryzoneid=dz.id)
-    JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
-    JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
-    JOIN %(stockoutCausesTable)s AS sct ON (sct.facilityvisitid=fv.id)
-    JOIN %(additionalProductSourcesTable)s AS apst ON (apst.facilityvisitid=fv.id)
+    LEFT JOIN %(facilitiesTable)s AS f ON (fv.facilityid=f.id)
+    LEFT JOIN %(distributionsTable)s AS d ON (fv.distributionid=d.id)
+    LEFT JOIN %(deliveryZonesTable)s AS dz on (d.deliveryzoneid=dz.id)
+    LEFT JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
+    LEFT JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
+    LEFT JOIN %(stockoutCausesTable)s AS sct ON (sct.facilityvisitid=fv.id)
+    LEFT JOIN %(additionalProductSourcesTable)s AS apst ON (apst.facilityvisitid=fv.id)
     LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
     WHERE period.startdate >= '2014-04-01'""" % \
      {'facilityVisitsTable': FACILITY_VISIT_TABLE,
