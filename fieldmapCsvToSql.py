@@ -41,7 +41,8 @@ def writeCreateTableSql(filePath, fieldMap, tableName):
         constraints += ' NOT NULL' if fieldD['nullable'] is False else ''
         constraints += ' ' + fieldD['constraint'] if fieldD['constraint'] != '' else ''
         f.write('\t, ' + fieldName + ' ' + fieldD['type'] + constraints + '\n')
-    f.write(');')
+    f.write(');\n')
+    f.write('GRANT SELECT ON TABLE ' + tableName + ' TO reporting_role;\n')
     f.close()
 
 

@@ -299,3 +299,4 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, additional_product_source_other boolean
 	, additional_product_source_other_description text
 );
+GRANT SELECT ON TABLE facility_visits_report TO reporting_role;
