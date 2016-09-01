@@ -60,6 +60,16 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_inventory_hpv2_delivered integer
 	, epi_inventory_hpv2_isa integer
 	, epi_inventory_hpv2_packsize integer
+	, epi_inventory_vaa_spoiled integer
+	, epi_inventory_vaa_existing integer
+	, epi_inventory_vaa_delivered integer
+	, epi_inventory_vaa_isa integer
+	, epi_inventory_vaa_packsize integer
+	, epi_inventory_vaadil_spoiled integer
+	, epi_inventory_vaadil_existing integer
+	, epi_inventory_vaadil_delivered integer
+	, epi_inventory_vaadil_isa integer
+	, epi_inventory_vaadil_packsize integer
 	, epi_inventory_measles_spoiled integer
 	, epi_inventory_measles_existing integer
 	, epi_inventory_measles_delivered integer
@@ -155,6 +165,26 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_use_hpv_end_of_month integer
 	, epi_use_hpv_expiration date
 	, epi_use_hpv_number_of_stockout_days integer
+	, epi_use_vaa_first_of_month integer
+	, epi_use_vaa_received integer
+	, epi_use_vaa_distributed integer
+	, epi_use_vaa_loss_other integer
+	, epi_use_vaa_loss_overheated integer
+	, epi_use_vaa_loss_frozen integer
+	, epi_use_vaa_loss_expired integer
+	, epi_use_vaa_end_of_month integer
+	, epi_use_vaa_expiration date
+	, epi_use_vaa_number_of_stockout_days integer
+	, epi_use_vaadil_first_of_month integer
+	, epi_use_vaadil_received integer
+	, epi_use_vaadil_distributed integer
+	, epi_use_vaadil_loss_other integer
+	, epi_use_vaadil_loss_overheated integer
+	, epi_use_vaadil_loss_frozen integer
+	, epi_use_vaadil_loss_expired integer
+	, epi_use_vaadil_end_of_month integer
+	, epi_use_vaadil_expiration date
+	, epi_use_vaadil_number_of_stockout_days integer
 	, epi_use_measles_first_of_month integer
 	, epi_use_measles_received integer
 	, epi_use_measles_distributed integer
@@ -231,6 +261,10 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, child_coverage_vpi_mb12_23 integer
 	, child_coverage_vpi_target_group integer
 	, child_coverage_vpi_vials_opened integer
+	, child_coverage_vaa_hc0_11 integer
+	, child_coverage_vaa_mb0_11 integer
+	, child_coverage_vaa_target_group integer
+	, child_coverage_vaa_vials_opened integer
 	, child_coverage_measles_hc0_11 integer
 	, child_coverage_measles_hc12_23 integer
 	, child_coverage_measles_mb0_11 integer

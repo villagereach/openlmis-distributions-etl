@@ -27,7 +27,7 @@ DB_NAME = 'open_lmis'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = "postgres"
-PASSWORD = "p@ssw0rd"
+PASSWORD = "Et+Php{qAmR!3SaF" #p@ssw0rd"
 
 # table names
 ADULT_COVERAGE_TABLE = 'vaccination_adult_coverage_line_items'
@@ -91,14 +91,14 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , apst.other AS additional_product_source_other
     , apst.additionalProductSourcesOther AS additional_product_source_other_description
     FROM %(facilityVisitsTable)s AS fv
-    LEFT JOIN %(facilitiesTable)s AS f ON (fv.facilityid=f.id)
-    LEFT JOIN %(distributionsTable)s AS d ON (fv.distributionid=d.id)
-    LEFT JOIN %(deliveryZonesTable)s AS dz on (d.deliveryzoneid=dz.id)
-    LEFT JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
-    LEFT JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
-    LEFT JOIN %(stockoutCausesTable)s AS sct ON (sct.facilityvisitid=fv.id)
-    LEFT JOIN %(additionalProductSourcesTable)s AS apst ON (apst.facilityvisitid=fv.id)
-    LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
+    JOIN %(facilitiesTable)s AS f ON (fv.facilityid=f.id)
+    JOIN %(distributionsTable)s AS d ON (fv.distributionid=d.id)
+    JOIN %(deliveryZonesTable)s AS dz on (d.deliveryzoneid=dz.id)
+    JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
+    JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
+    JOIN %(stockoutCausesTable)s AS sct ON (sct.facilityvisitid=fv.id)
+    JOIN %(additionalProductSourcesTable)s AS apst ON (apst.facilityvisitid=fv.id)
+    JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
     WHERE period.startdate >= '2014-04-01'""" % \
      {'facilityVisitsTable': FACILITY_VISIT_TABLE,
       'facilitiesTable': FACILITY_TABLE,
@@ -478,7 +478,8 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
 	newColName = re.sub(r'measles10', 'measles', newColName)
 	newColName = re.sub(r'tetanus10', 'tetanus', newColName)
 	newColName = re.sub(r'vpi5', 'vpi', newColName)
-	newColName = re.sub(r'yfv1', 'hpv2', newColName)
+	newColName = re.sub(r'yfv1', 'vaa', newColName)
+	newColName = re.sub(r'vaa10Dil', 'vaadil', newColName)
 	return 'epi_inventory_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiInvTable, keyColName, epiInvProdCodes, cols, rename)
 
@@ -500,7 +501,8 @@ def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
 	newColName = re.sub('5measles', 'measles', newColName)
 	newColName = re.sub('6measlesdil', 'measlesdil', newColName)
 	newColName = re.sub('4pcv10', 'pcv', newColName)
-	newColName = re.sub('6yfv', 'hpv', newColName)
+	newColName = re.sub('6yfv', 'vaa', newColName)
+	newColName = re.sub('6yfvdil', 'vaadil', newColName)
 	newColName = re.sub('8tetanus', 'tetanus', newColName)
 	newColName = re.sub('vpi5', 'vpi', newColName)
 	return 'epi_use_' + newColName
@@ -546,6 +548,7 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
 	newColName = re.sub('BCG', 'bcg', origColName)
 	newColName = re.sub('VPI', 'vpi', newColName)
 	newColName = re.sub('IPV', 'vpi', newColName) #IPV and VPI are synonymous
+	newColName = re.sub('VAA', 'vaa', newColName)
 	newColName = re.sub('Measles', 'measles', newColName)
 	newColName = re.sub('PCV10 ', 'pcv', newColName)
 	newColName = re.sub('Penta ', 'penta', newColName)
@@ -577,6 +580,7 @@ def mapChildCoverageOpenVialsToFacVisits(facVisitRows, childCovOpenVialsTable, c
 	newColName = re.sub('BCG', 'bcg', origColName)
 	newColName = re.sub('VPI', 'vpi', origColName)
 	newColName = re.sub('IPV', 'vpi', origColName) #IPV and VPI are synonymous
+	newColName = re.sub('VAA', 'vaa', origColName)
 	newColName = re.sub('Measles', 'measles', newColName)
 	newColName = re.sub('PCV', 'pcv', newColName)
 	newColName = re.sub('Penta', 'penta', newColName)
