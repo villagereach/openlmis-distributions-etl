@@ -22,8 +22,9 @@ Limitations:
 
 
 FIELD_MAP = 'fieldmap.csv'
-#DB_NAME = 'open_lmis_demo_sd'
+#DB_NAME = 'open_lmis_from_prod_4_14_2016'
 DB_NAME = 'open_lmis'
+#DB_NAME = 'open_lmis_stripped'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = "postgres"
@@ -233,10 +234,6 @@ def rowToTable(rowData, keyColumn, allowDupes = False):
             raise LookupError('Key column ' + keyColumn + ' not in row data: ' + str(rowData))
         key = toUtf(row[keyColumn])
         if allowDupes == False and row[keyColumn] in table:
-            #print 'rowData :'
-            #print rowData
-            #print 'keyColumn '
-            #print keyColumn
             raise StandardError('Duplicate key ' + row[keyColumn] + ' found')
 
         # turn row dict into a dict with strings in utf
@@ -257,7 +254,7 @@ def rowToTable(rowData, keyColumn, allowDupes = False):
 
 def loadFields():
     """
-    Loads field names we want from field map file
+    Loads field names we want from FIELD_MAP file
     Return: list of field names
     """
     fieldNames = []
@@ -323,9 +320,6 @@ def storeVisits(conn, visitRows, fields):
     # from fields
     valueTups = [tuple(visitD.get(fname) for fname in fields) for visitD in visitRows]
     colStr = '(' + ','.join(fname for fname in fields) + ')'
-
-    print 'colSrt: '
-    print colStr
 
     # create a value string that's SQL safe for every tuple we created, this allows the insert
     # statement later to be one statement, one column list and then a list of all the values/rows
@@ -508,18 +502,23 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
     """
 
     cols = ['existingquantity', 'spoiledquantity', 'deliveredquantity', 'idealquantity']
-    #cols in "epi_inventory_line_items" table
     #cols = ['existingquantity', 'spoiledquantity', 'deliveredquantity', 'idealquantity', 'idealquantitybypacksize']
 
     keyColName = 'productcode'
 
     # pivot the line items into a column structure
     def rename(origColName): # a function that the pivoted column names will be renamed with
-        newColName = re.sub(r'quantity', '', origColName) #replace 'quantity' with '' within origColName
-        newColName = re.sub(r'ideal', 'isa', newColName) #replace 'ideal' with 'isa' within newColName
-        newColName = re.sub(r'bcg20', 'bcg', newColName)
-        newColName = re.sub(r'measles10', 'measles', newColName)
-        newColName = re.sub(r'tetanus10', 'tetanus', newColName)
+        newColName = re.sub('quantity', '', origColName) #replace 'quantity' with '' within origColName
+        newColName = re.sub('ideal', 'isa', newColName) #replace 'ideal' with 'isa' within newColName
+        newColName = re.sub('bcg20', 'bcg', newColName)
+        #newColName = re.sub('measles10', 'measles', newColName)
+        newColName = re.sub('measles\d+', 'sarampo1', newColName) # measles is now called sarampo1
+        newColName = re.sub('tetanus10', 'tetanus', newColName)
+
+        newColName = re.sub('rv', 'rotarix', newColName) #entry added on 4/8/2016
+        newColName = re.sub('msddil', 'sarampo2diluent', newColName) #entry added on 4/8/2016
+        newColName = re.sub('msd', 'sarampo2', newColName) #entry added on 4/8/2016
+
         return 'epi_inventory_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiInvTable, keyColName, epiInvProdCodes, cols, rename)
 
@@ -538,11 +537,20 @@ def mapEpiUseToFacVisits(facVisitRows, epiUseTable, epiUseProdCodes):
         newColName = re.sub('2bcgdil', 'bcgdil', newColName)
         newColName = re.sub('3polio', 'polio', newColName)
         newColName = re.sub('4penta', 'penta', newColName)
-        newColName = re.sub('5measles', 'measles', newColName)
-        newColName = re.sub('6measlesdil', 'measlesdil', newColName)
+
+        #newColName = re.sub('5measles', 'measles', newColName)
+        newColName = re.sub('5measles', 'sarampo1', newColName) # measles is now called sarampo1
+        #newColName = re.sub('6measlesdil', 'measlesdil', newColName)
+        newColName = re.sub('6measlesdil', 'sarampo1diluent', newColName)
+
         newColName = re.sub('7pcv10', 'pcv', newColName)
         newColName = re.sub('8hpv', 'hpv', newColName)
         newColName = re.sub('9tetanus', 'tetanus', newColName)
+
+        newColName = re.sub(r'rv', 'rotarix', newColName) #entry added on 4/8/2016
+        newColName = re.sub(r'msddil', 'sarampo2diluent', newColName) #entry added on 4/8/2016
+        newColName = re.sub(r'msd', 'sarampo2', newColName) #entry added on 4/8/2016
+
         return 'epi_use_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiUseTable, keyColName, epiUseProdCodes, cols, rename)
 
@@ -573,19 +581,13 @@ def mapAdultCoverageToFacVisits(facVisitRows, adultCovTable, adultCovDemographic
     mapLineItemsToFacVisits(facVisitRows, adultCovTable, keyColName, adultCovDemographicGroups, cols, rename)
 
 
+##
 def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
     """
     Given a list of the facility visits, the child coverage line items as a table,
     and a list of distinct child coverage vaccinations, will map those line items to columns
     into the facility visit row.
     """
-
-    #print 'facVisitRows'
-    #print facVisitRows
-    #print 'childCovTable'
-    #print childCovTable
-    #print 'childCovVaccs'
-    #print childCovVaccs
 
     cols = ['healthcenter11months', 'outreach11months', 'healthcenter23months', 'outreach23months', 'targetgroup']
     keyColName = 'vaccination'
@@ -595,8 +597,8 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
         newColName = re.sub('PCV10 ', 'pcv', newColName)
         newColName = re.sub('Penta ', 'penta', newColName)
         newColName = re.sub('Polio ', 'polio', newColName)
-        newColName = re.sub('RV Rotarix', 'rotarix', newColName)
-        newColName = re.sub('Sarampo', 'sarampo', newColName)
+        newColName = re.sub('RV Rotarix ', 'rotarix', newColName) #added trailing space on 4/8/2016
+        newColName = re.sub('Sarampo ', 'sarampo', newColName) #added trailing space on 4/8/2016
         newColName = re.sub('IPV', 'ipv', newColName)
         newColName = re.sub('\(Newborn\)', '0', newColName)
         newColName = re.sub('1st dose', '1', newColName)
@@ -604,11 +606,17 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
         newColName = re.sub('3rd dose', '3', newColName)
         newColName = re.sub('1a dose', '1', newColName)
         newColName = re.sub('2a dose', '2', newColName)
+        newColName = re.sub('3a dose', '3', newColName) #added on 4/8/2016
         newColName = re.sub('healthcenter', 'hc', newColName)
         newColName = re.sub('outreach', 'mb', newColName)
         newColName = re.sub('11months', '0_11', newColName)
         newColName = re.sub('23months', '12_23', newColName)
-        newColName = re.sub('(.+)\d+_targetgroup', r'\1_targetgroup', newColName) # fix things like polio2_targetgroup to be just polio_targetgroup
+        newColName = re.sub('sarampo1_targetgroup', 'sarampo1_target_group', newColName)
+        newColName = re.sub('sarampo2_targetgroup', 'sarampo2_target_group', newColName)
+
+        # change things like polio2_targetgroup to be just polio_targetgroup. Note that this shouldn't apply to sarampo1 and sarampo2 because they're two seperate products.
+        newColName = re.sub('(.+)\d+_targetgroup', r'\1_targetgroup', newColName)
+
         newColName = re.sub('targetgroup', 'target_group', newColName)
         return 'child_coverage_' + newColName
     mapLineItemsToFacVisits(facVisitRows, childCovTable, keyColName, childCovVaccs, cols, rename)
@@ -629,6 +637,13 @@ def mapChildCoverageOpenVialsToFacVisits(facVisitRows, childCovOpenVialsTable, c
         newColName = re.sub('PCV', 'pcv', newColName)
         newColName = re.sub('Penta', 'penta', newColName)
         newColName = re.sub('Polio', 'polio', newColName)
+
+        newColName = re.sub('RV Rotarix', 'rotarix', newColName) #added on 4/8/2016
+        #newColName = re.sub('Sarampo', 'sarampo', newColName) #added on 4/8/2016
+        newColName = re.sub('Sarampo', 'sarampo1', newColName) #added on 4/8/2016
+        newColName = re.sub('MSD', 'sarampo2', newColName) #added on 4/8/2016
+        newColName = re.sub('IPV', 'ipv', newColName) #added on 4/8/2016
+
         newColName = re.sub('openedvials', 'vials_opened', newColName)
         return 'child_coverage_' + newColName
     mapLineItemsToFacVisits(facVisitRows, childCovOpenVialsTable, keyColName, childCovProductVialNames, cols, rename)
@@ -675,7 +690,7 @@ def pivotLineItems(itemTable, keyColName, keyColValues, columns, colRename = Non
     keyColValues: ['AAA', 'BBB']
     columns: ['existing']
     lineItems: [ {'code': 'AAA', 'existing': 10},
-		 {'code': 'BBB', 'existing': 20} ]
+		         {'code': 'BBB', 'existing': 20} ]
     lineItemDict: {'AAA_existing': 10, 'BBB_existing': 20}
 
     If colRename is defined, it must be a function that takes a key string and returns a key string
@@ -728,7 +743,6 @@ try:
 
     # load desired field list and store all visit rows in report DB
     fields = loadFields()
-    #printMissingFieldNames(facVisitRows, fields)
     storeVisits(dbConn, facVisitRows, fields)
 
     dbConn.commit()
