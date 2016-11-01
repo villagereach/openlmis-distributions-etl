@@ -84,6 +84,12 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_inventory_gas_existing integer
 	, epi_inventory_gas_delivered integer
 	, epi_inventory_gas_isa integer
+	, epi_inventory_syringe20ml_existing integer
+	, epi_inventory_syringe20ml_delivered integer
+	, epi_inventory_syringe20ml_isa integer
+	, epi_inventory_syringe10ml_existing integer
+	, epi_inventory_syringe10ml_delivered integer
+	, epi_inventory_syringe10ml_isa integer
 	, epi_inventory_syringe5ml_existing integer
 	, epi_inventory_syringe5ml_delivered integer
 	, epi_inventory_syringe5ml_isa integer

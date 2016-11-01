@@ -22,9 +22,7 @@ Limitations:
 
 
 FIELD_MAP = 'fieldmap.csv'
-#DB_NAME = 'open_lmis_from_prod_4_14_2016'
 DB_NAME = 'open_lmis'
-#DB_NAME = 'open_lmis_stripped'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = "postgres"
