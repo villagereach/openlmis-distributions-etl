@@ -100,7 +100,7 @@ VRMIS_SQL = """SELECT v.*
              'selvStartDate': SELV_START_DATE }
 
 FACILITY_VISIT_SQL = """SELECT fv.id AS id
-    , f.code || '-' || to_char(period.startdate, 'YYYY-MM') AS visit_code
+    , f.code || '-' || to_char(period.startdate, 'YYYY-MM-DD') AS visit_code
     , fv.facilityid AS facility_id
     , fv.visited AS visited
     , fv.visitdate AS visited_date
