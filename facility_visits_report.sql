@@ -317,4 +317,10 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, full_vaccinations_male_mb integer
 	, full_vaccinations_female_hc integer
 	, full_vaccinations_female_mb integer
+	, motorbike_problem_lack_of_funding_for_fuel boolean
+	, motorbike_problem_repairs_scheduling_problem boolean
+	, motoribke_problem_lack_of_funding_for_repairs boolean
+	, motorbike_problem_missing_parts boolean
+	, motorbike_problem_other boolean
+	, motorbike_problem_other_description text
 );
