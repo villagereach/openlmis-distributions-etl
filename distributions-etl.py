@@ -113,7 +113,15 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , fv.reasonfornotvisiting AS no_visit_reason
     , fv.otherreasondescription AS no_visit_other_reason
     , fv.observations
+    , fv.priorObservations AS prior_observations
     , fv.facilitycatchmentpopulation AS catchement_population
+    , fv.numberOfOutreachVisitsPlanned AS number_of_outreach_visits_planned
+    , fv.numberOfOutreachVisitsCompleted AS number_of_outreach_visits_completed
+    , fv.numberOfMotorbikesAtHU AS number_of_motorbikes_at_hu
+    , fv.numberOfFunctioningMotorbikes AS number_of_functioning_motorbikes
+    , fv.numberOfMotorizedVehiclesWithProblems AS number_of_motorized_vehicles_with_problems
+    , fv.numberOfDaysWithLimitedTransport AS number_of_days_with_limited_transport
+    , fv.technicalStaff AS technical_staff
     , period.id as period_id
     , dz.id AS delivery_zone_id
     , fc.femalehealthcenter AS full_vaccinations_female_hc

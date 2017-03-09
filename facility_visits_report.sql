@@ -12,11 +12,19 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, no_visit_reason text
 	, no_visit_other_reason text
 	, observations text
+	, prior_observations text
 	, verified_by_name text
 	, verified_by_title text
 	, confirmed_by_name text
 	, confirmed_by_title text
 	, catchement_population integer
+	, number_of_outreach_visits_planned integer
+	, number_of_outreach_visits_completed integer
+	, number_of_motorbikes_at_hu integer
+	, number_of_functioning_motorbikes integer
+	, number_of_motorized_vehicles_with_problems integer
+	, number_of_days_with_limited_transport integer
+	, technical_staff integer
 	, epi_inventory_bcg_spoiled integer
 	, epi_inventory_bcg_existing integer
 	, epi_inventory_bcg_delivered integer
