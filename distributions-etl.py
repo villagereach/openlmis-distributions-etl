@@ -604,7 +604,7 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
     into the facility visit row.
     """
 
-    cols = ['healthcenter11months', 'outreach11months', 'healthcenter23months', 'outreach23months', 'targetgroup']
+    cols = ['totalhealthcenter11months', 'totaloutreach11months', 'totalhealthcenter23months', 'totaloutreach23months', 'femalehealthcenter11months', 'femaleoutreach11months', 'femalehealthcenter23months', 'femaleoutreach23months', 'malehealthcenter11months', 'maleoutreach11months', 'malehealthcenter23months', 'maleoutreach23months', 'femalehealthcenter9years', 'femaleoutreach9years', 'targetgroup']
     keyColName = 'vaccination'
     def rename(origColName): # a function that the pivoted column names will be renamed with
         newColName = re.sub('BCG', 'bcg', origColName)
@@ -622,8 +622,13 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
         newColName = re.sub('1a dose', '1', newColName)
         newColName = re.sub('2a dose', '2', newColName)
         newColName = re.sub('3a dose', '3', newColName) #added on 4/8/2016
+        newColName = re.sub('HPV', 'hpv', newColName)   #added on 9/3/2017
+        newColName = re.sub('total', 't', newColName)   #added on 9/3/2017
+        newColName = re.sub('female', 'f', newColName)  #added on 9/3/2017
+        newColName = re.sub('male', 'm', newColName)    #added on 9/3/2017
         newColName = re.sub('healthcenter', 'hc', newColName)
         newColName = re.sub('outreach', 'mb', newColName)
+        newColName = re.sub('9years', '9_11y', newColName)  #added on 9/3/2017
         newColName = re.sub('11months', '0_11', newColName)
         newColName = re.sub('23months', '12_23', newColName)
         newColName = re.sub('sarampo1_targetgroup', 'sarampo1_target_group', newColName)
@@ -658,6 +663,7 @@ def mapChildCoverageOpenVialsToFacVisits(facVisitRows, childCovOpenVialsTable, c
         newColName = re.sub('Sarampo', 'sarampo1', newColName) #added on 4/8/2016
         newColName = re.sub('MSD', 'sarampo2', newColName) #added on 4/8/2016
         newColName = re.sub('IPV', 'ipv', newColName) #added on 4/8/2016
+        newColName = re.sub('HPV', 'hpv', newColName) #added on 9/3/2017
 
         newColName = re.sub('openedvials', 'vials_opened', newColName)
         return 'child_coverage_' + newColName
