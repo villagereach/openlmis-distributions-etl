@@ -48,6 +48,7 @@ GEO_LEVEL_TABLE = 'geographic_levels'
 PERIOD_TABLE = 'processing_periods'
 PRODUCT_TABLE = 'products'
 PRODUCT_GROUP_TABLE = 'product_groups'
+MOTOBIKE_PROBLEMS_TABLE = 'motorbike_problems'
 VRMIS_TABLE = 'vrmis'
 
 
@@ -112,7 +113,15 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , fv.reasonfornotvisiting AS no_visit_reason
     , fv.otherreasondescription AS no_visit_other_reason
     , fv.observations
+    , fv.priorObservations AS prior_observations
     , fv.facilitycatchmentpopulation AS catchement_population
+    , fv.numberOfOutreachVisitsPlanned AS number_of_outreach_visits_planned
+    , fv.numberOfOutreachVisitsCompleted AS number_of_outreach_visits_completed
+    , fv.numberOfMotorbikesAtHU AS number_of_motorbikes_at_hu
+    , fv.numberOfFunctioningMotorbikes AS number_of_functioning_motorbikes
+    , fv.numberOfMotorizedVehiclesWithProblems AS number_of_motorized_vehicles_with_problems
+    , fv.numberOfDaysWithLimitedTransport AS number_of_days_with_limited_transport
+    , fv.technicalStaff AS technical_staff
     , period.id as period_id
     , dz.id AS delivery_zone_id
     , fc.femalehealthcenter AS full_vaccinations_female_hc
@@ -120,12 +129,19 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
     , fc.malehealthcenter AS full_vaccinations_male_hc
     , fc.maleoutreach AS full_vaccinations_male_mb
     , acov.openedvials AS adult_coverage_tetanus_vials_opened
+    , mpt.lackOfFundingForFuel AS motorbike_problem_lack_of_funding_for_fuel
+    , mpt.repairsSchedulingProblem AS motorbike_problem_repairs_scheduling_problem
+    , mpt.lackOfFundingForRepairs AS motoribke_problem_lack_of_funding_for_repairs
+    , mpt.missingParts AS motorbike_problem_missing_parts
+    , mpt.other AS motorbike_problem_other
+    , mpt.motorbikeProblemOther AS motorbike_problem_other_description
     FROM %(facilityVisitsTable)s AS fv
     JOIN %(facilitiesTable)s AS f ON (fv.facilityid=f.id)
     JOIN %(distributionsTable)s AS d ON (fv.distributionid=d.id)
     JOIN %(deliveryZonesTable)s AS dz on (d.deliveryzoneid=dz.id)
     JOIN %(periodsTable)s AS period ON (d.periodid=period.id)
     JOIN %(adultCovOpenVialTable)s AS acov ON (acov.facilityvisitid=fv.id)
+    JOIN %(motorbikeProblemsTable)s AS mpt ON (mpt.facilityVisitId=fv.id)
     LEFT JOIN %(fullCoveragesTable)s AS fc ON (fc.facilityvisitid=fv.id)
     WHERE period.startdate >= '%(selvStartDate)s' """ % \
                      {'facilityVisitsTable': FACILITY_VISIT_TABLE,
@@ -135,7 +151,8 @@ FACILITY_VISIT_SQL = """SELECT fv.id AS id
                       'deliveryZonesTable': DZ_TABLE,
                       'periodsTable': PERIOD_TABLE,
                       'adultCovOpenVialTable': ADULT_COVERAGE_OPEN_VIAL_TABLE,
-                      'selvStartDate': SELV_START_DATE}
+                      'selvStartDate': SELV_START_DATE,
+                      'motorbikeProblemsTable': MOTOBIKE_PROBLEMS_TABLE}
 
 
 GEO_ZONE_SQL = """ SELECT gz.id
@@ -587,7 +604,7 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
     into the facility visit row.
     """
 
-    cols = ['healthcenter11months', 'outreach11months', 'healthcenter23months', 'outreach23months', 'targetgroup']
+    cols = ['totalhealthcenter11months', 'totaloutreach11months', 'totalhealthcenter23months', 'totaloutreach23months', 'femalehealthcenter11months', 'femaleoutreach11months', 'femalehealthcenter23months', 'femaleoutreach23months', 'malehealthcenter11months', 'maleoutreach11months', 'malehealthcenter23months', 'maleoutreach23months', 'femalehealthcenter9years', 'femaleoutreach9years', 'targetgroup']
     keyColName = 'vaccination'
     def rename(origColName): # a function that the pivoted column names will be renamed with
         newColName = re.sub('BCG', 'bcg', origColName)
@@ -605,8 +622,13 @@ def mapChildCoverageToFacVisits(facVisitRows, childCovTable, childCovVaccs):
         newColName = re.sub('1a dose', '1', newColName)
         newColName = re.sub('2a dose', '2', newColName)
         newColName = re.sub('3a dose', '3', newColName) #added on 4/8/2016
+        newColName = re.sub('HPV', 'hpv', newColName)   #added on 9/3/2017
+        newColName = re.sub('total', 't', newColName)   #added on 9/3/2017
+        newColName = re.sub('female', 'f', newColName)  #added on 9/3/2017
+        newColName = re.sub('male', 'm', newColName)    #added on 9/3/2017
         newColName = re.sub('healthcenter', 'hc', newColName)
         newColName = re.sub('outreach', 'mb', newColName)
+        newColName = re.sub('9years', '9_11y', newColName)  #added on 9/3/2017
         newColName = re.sub('11months', '0_11', newColName)
         newColName = re.sub('23months', '12_23', newColName)
         newColName = re.sub('sarampo1_targetgroup', 'sarampo1_target_group', newColName)
@@ -641,6 +663,7 @@ def mapChildCoverageOpenVialsToFacVisits(facVisitRows, childCovOpenVialsTable, c
         newColName = re.sub('Sarampo', 'sarampo1', newColName) #added on 4/8/2016
         newColName = re.sub('MSD', 'sarampo2', newColName) #added on 4/8/2016
         newColName = re.sub('IPV', 'ipv', newColName) #added on 4/8/2016
+        newColName = re.sub('HPV', 'hpv', newColName) #added on 9/3/2017
 
         newColName = re.sub('openedvials', 'vials_opened', newColName)
         return 'child_coverage_' + newColName

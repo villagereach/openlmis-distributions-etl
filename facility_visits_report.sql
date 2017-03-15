@@ -12,11 +12,19 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, no_visit_reason text
 	, no_visit_other_reason text
 	, observations text
+	, prior_observations text
 	, verified_by_name text
 	, verified_by_title text
 	, confirmed_by_name text
 	, confirmed_by_title text
 	, catchement_population integer
+	, number_of_outreach_visits_planned integer
+	, number_of_outreach_visits_completed integer
+	, number_of_motorbikes_at_hu integer
+	, number_of_functioning_motorbikes integer
+	, number_of_motorized_vehicles_with_problems integer
+	, number_of_days_with_limited_transport integer
+	, technical_staff integer
 	, epi_inventory_bcg_spoiled integer
 	, epi_inventory_bcg_existing integer
 	, epi_inventory_bcg_delivered integer
@@ -231,10 +239,10 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, adult_coverage_other_tetanus25hc integer
 	, adult_coverage_other_tetanus25mb integer
 	, adult_coverage_tetanus_vials_opened integer
-	, child_coverage_bcg_hc0_11 integer
-	, child_coverage_bcg_hc12_23 integer
-	, child_coverage_bcg_mb0_11 integer
-	, child_coverage_bcg_mb12_23 integer
+	, child_coverage_bcg_thc0_11 integer
+	, child_coverage_bcg_thc12_23 integer
+	, child_coverage_bcg_tmb0_11 integer
+	, child_coverage_bcg_tmb12_23 integer
 	, child_coverage_bcg_target_group integer
 	, child_coverage_bcg_vials_opened integer
 	, child_coverage_measles_hc0_11 integer
@@ -243,78 +251,204 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, child_coverage_measles_mb12_23 integer
 	, child_coverage_measles_target_group integer
 	, child_coverage_measles_vials_opened integer
-	, child_coverage_pcv1_hc0_11 integer
-	, child_coverage_pcv1_hc12_23 integer
-	, child_coverage_pcv1_mb0_11 integer
-	, child_coverage_pcv1_mb12_23 integer
-	, child_coverage_pcv2_hc0_11 integer
-	, child_coverage_pcv2_hc12_23 integer
-	, child_coverage_pcv2_mb0_11 integer
-	, child_coverage_pcv2_mb12_23 integer
-	, child_coverage_pcv3_hc0_11 integer
-	, child_coverage_pcv3_hc12_23 integer
-	, child_coverage_pcv3_mb0_11 integer
-	, child_coverage_pcv3_mb12_23 integer
+	, child_coverage_pcv1_thc0_11 integer
+	, child_coverage_pcv1_thc12_23 integer
+	, child_coverage_pcv1_tmb0_11 integer
+	, child_coverage_pcv1_tmb12_23 integer
+	, child_coverage_pcv2_thc0_11 integer
+	, child_coverage_pcv2_thc12_23 integer
+	, child_coverage_pcv2_tmb0_11 integer
+	, child_coverage_pcv2_tmb12_23 integer
+	, child_coverage_pcv3_thc0_11 integer
+	, child_coverage_pcv3_thc12_23 integer
+	, child_coverage_pcv3_tmb0_11 integer
+	, child_coverage_pcv3_tmb12_23 integer
 	, child_coverage_pcv_target_group integer
 	, child_coverage_pcv_vials_opened integer
-	, child_coverage_penta1_hc0_11 integer
-	, child_coverage_penta1_hc12_23 integer
-	, child_coverage_penta1_mb0_11 integer
-	, child_coverage_penta1_mb12_23 integer
-	, child_coverage_penta2_hc0_11 integer
-	, child_coverage_penta2_hc12_23 integer
-	, child_coverage_penta2_mb0_11 integer
-	, child_coverage_penta2_mb12_23 integer
-	, child_coverage_penta3_hc0_11 integer
-	, child_coverage_penta3_hc12_23 integer
-	, child_coverage_penta3_mb0_11 integer
-	, child_coverage_penta3_mb12_23 integer
+	, child_coverage_penta1_thc0_11 integer
+	, child_coverage_penta1_thc12_23 integer
+	, child_coverage_penta1_tmb0_11 integer
+	, child_coverage_penta1_tmb12_23 integer
+	, child_coverage_penta2_thc0_11 integer
+	, child_coverage_penta2_thc12_23 integer
+	, child_coverage_penta2_tmb0_11 integer
+	, child_coverage_penta2_tmb12_23 integer
+	, child_coverage_penta3_thc0_11 integer
+	, child_coverage_penta3_thc12_23 integer
+	, child_coverage_penta3_tmb0_11 integer
+	, child_coverage_penta3_tmb12_23 integer
 	, child_coverage_penta_target_group integer
 	, child_coverage_penta1_vials_opened integer
 	, child_coverage_penta10_vials_opened integer
-	, child_coverage_polio0_hc0_11 integer
-	, child_coverage_polio0_mb0_11 integer
-	, child_coverage_polio1_hc0_11 integer
-	, child_coverage_polio1_hc12_23 integer
-	, child_coverage_polio1_mb0_11 integer
-	, child_coverage_polio1_mb12_23 integer
-	, child_coverage_polio2_hc0_11 integer
-	, child_coverage_polio2_hc12_23 integer
-	, child_coverage_polio2_mb0_11 integer
-	, child_coverage_polio2_mb12_23 integer
-	, child_coverage_polio3_hc0_11 integer
-	, child_coverage_polio3_hc12_23 integer
-	, child_coverage_polio3_mb0_11 integer
-	, child_coverage_polio3_mb12_23 integer
+	, child_coverage_polio0_thc0_11 integer
+	, child_coverage_polio0_tmb0_11 integer
+	, child_coverage_polio1_thc0_11 integer
+	, child_coverage_polio1_thc12_23 integer
+	, child_coverage_polio1_tmb0_11 integer
+	, child_coverage_polio1_tmb12_23 integer
+	, child_coverage_polio2_thc0_11 integer
+	, child_coverage_polio2_thc12_23 integer
+	, child_coverage_polio2_tmb0_11 integer
+	, child_coverage_polio2_tmb12_23 integer
+	, child_coverage_polio3_thc0_11 integer
+	, child_coverage_polio3_thc12_23 integer
+	, child_coverage_polio3_tmb0_11 integer
+	, child_coverage_polio3_tmb12_23 integer
 	, child_coverage_polio_target_group integer
 	, child_coverage_polio10_vials_opened integer
 	, child_coverage_polio20_vials_opened integer
-	, child_coverage_ipv_hc0_11 integer
-	, child_coverage_ipv_mb0_11 integer
+	, child_coverage_ipv_thc0_11 integer
+	, child_coverage_ipv_tmb0_11 integer
 	, child_coverage_ipv_target_group integer
 	, child_coverage_ipv_vials_opened integer
-	, child_coverage_rotarix1_hc0_11 integer
-	, child_coverage_rotarix1_hc12_23 integer
-	, child_coverage_rotarix1_mb0_11 integer
-	, child_coverage_rotarix1_mb12_23 integer
-	, child_coverage_rotarix2_hc0_11 integer
-	, child_coverage_rotarix2_hc12_23 integer
-	, child_coverage_rotarix2_mb0_11 integer
-	, child_coverage_rotarix2_mb12_23 integer
+	, child_coverage_rotarix1_thc0_11 integer
+	, child_coverage_rotarix1_thc12_23 integer
+	, child_coverage_rotarix1_tmb0_11 integer
+	, child_coverage_rotarix1_tmb12_23 integer
+	, child_coverage_rotarix2_thc0_11 integer
+	, child_coverage_rotarix2_thc12_23 integer
+	, child_coverage_rotarix2_tmb0_11 integer
+	, child_coverage_rotarix2_tmb12_23 integer
 	, child_coverage_rotarix_target_group integer
 	, child_coverage_rotarix_vials_opened integer
-	, child_coverage_sarampo1_hc0_11 integer
-	, child_coverage_sarampo1_hc12_23 integer
-	, child_coverage_sarampo1_mb0_11 integer
-	, child_coverage_sarampo1_mb12_23 integer
+	, child_coverage_sarampo1_thc0_11 integer
+	, child_coverage_sarampo1_thc12_23 integer
+	, child_coverage_sarampo1_tmb0_11 integer
+	, child_coverage_sarampo1_tmb12_23 integer
 	, child_coverage_sarampo1_target_group integer
 	, child_coverage_sarampo1_vials_opened integer
-	, child_coverage_sarampo2_hc12_23 integer
-	, child_coverage_sarampo2_mb12_23 integer
+	, child_coverage_sarampo2_thc12_23 integer
+	, child_coverage_sarampo2_tmb12_23 integer
 	, child_coverage_sarampo2_target_group integer
 	, child_coverage_sarampo2_vials_opened integer
+	, child_coverage_bcg_fhc0_11 integer
+	, child_coverage_bcg_fhc12_23 integer
+	, child_coverage_bcg_fmb0_11 integer
+	, child_coverage_bcg_fmb12_23 integer
+	, child_coverage_pcv1_fhc0_11 integer
+	, child_coverage_pcv1_fhc12_23 integer
+	, child_coverage_pcv1_fmb0_11 integer
+	, child_coverage_pcv1_fmb12_23 integer
+	, child_coverage_pcv2_fhc0_11 integer
+	, child_coverage_pcv2_fhc12_23 integer
+	, child_coverage_pcv2_fmb0_11 integer
+	, child_coverage_pcv2_fmb12_23 integer
+	, child_coverage_pcv3_fhc0_11 integer
+	, child_coverage_pcv3_fhc12_23 integer
+	, child_coverage_pcv3_fmb0_11 integer
+	, child_coverage_pcv3_fmb12_23 integer
+	, child_coverage_penta1_fhc0_11 integer
+	, child_coverage_penta1_fhc12_23 integer
+	, child_coverage_penta1_fmb0_11 integer
+	, child_coverage_penta1_fmb12_23 integer
+	, child_coverage_penta2_fhc0_11 integer
+	, child_coverage_penta2_fhc12_23 integer
+	, child_coverage_penta2_fmb0_11 integer
+	, child_coverage_penta2_fmb12_23 integer
+	, child_coverage_penta3_fhc0_11 integer
+	, child_coverage_penta3_fhc12_23 integer
+	, child_coverage_penta3_fmb0_11 integer
+	, child_coverage_penta3_fmb12_23 integer
+	, child_coverage_polio0_fhc0_11 integer
+	, child_coverage_polio0_fmb0_11 integer
+	, child_coverage_polio1_fhc0_11 integer
+	, child_coverage_polio1_fhc12_23 integer
+	, child_coverage_polio1_fmb0_11 integer
+	, child_coverage_polio1_fmb12_23 integer
+	, child_coverage_polio2_fhc0_11 integer
+	, child_coverage_polio2_fhc12_23 integer
+	, child_coverage_polio2_fmb0_11 integer
+	, child_coverage_polio2_fmb12_23 integer
+	, child_coverage_polio3_fhc0_11 integer
+	, child_coverage_polio3_fhc12_23 integer
+	, child_coverage_polio3_fmb0_11 integer
+	, child_coverage_polio3_fmb12_23 integer
+	, child_coverage_ipv_fhc0_11 integer
+	, child_coverage_ipv_fmb0_11 integer
+	, child_coverage_rotarix1_fhc0_11 integer
+	, child_coverage_rotarix1_fhc12_23 integer
+	, child_coverage_rotarix1_fmb0_11 integer
+	, child_coverage_rotarix1_fmb12_23 integer
+	, child_coverage_rotarix2_fhc0_11 integer
+	, child_coverage_rotarix2_fhc12_23 integer
+	, child_coverage_rotarix2_fmb0_11 integer
+	, child_coverage_rotarix2_fmb12_23 integer
+	, child_coverage_sarampo1_fhc0_11 integer
+	, child_coverage_sarampo1_fhc12_23 integer
+	, child_coverage_sarampo1_fmb0_11 integer
+	, child_coverage_sarampo1_fmb12_23 integer
+	, child_coverage_sarampo2_fhc12_23 integer
+	, child_coverage_sarampo2_fmb12_23 integer
+	, child_coverage_bcg_mhc0_11 integer
+	, child_coverage_bcg_mhc12_23 integer
+	, child_coverage_bcg_mmb0_11 integer
+	, child_coverage_bcg_mmb12_23 integer
+	, child_coverage_pcv1_mhc0_11 integer
+	, child_coverage_pcv1_mhc12_23 integer
+	, child_coverage_pcv1_mmb0_11 integer
+	, child_coverage_pcv1_mmb12_23 integer
+	, child_coverage_pcv2_mhc0_11 integer
+	, child_coverage_pcv2_mhc12_23 integer
+	, child_coverage_pcv2_mmb0_11 integer
+	, child_coverage_pcv2_mmb12_23 integer
+	, child_coverage_pcv3_mhc0_11 integer
+	, child_coverage_pcv3_mhc12_23 integer
+	, child_coverage_pcv3_mmb0_11 integer
+	, child_coverage_pcv3_mmb12_23 integer
+	, child_coverage_penta1_mhc0_11 integer
+	, child_coverage_penta1_mhc12_23 integer
+	, child_coverage_penta1_mmb0_11 integer
+	, child_coverage_penta1_mmb12_23 integer
+	, child_coverage_penta2_mhc0_11 integer
+	, child_coverage_penta2_mhc12_23 integer
+	, child_coverage_penta2_mmb0_11 integer
+	, child_coverage_penta2_mmb12_23 integer
+	, child_coverage_penta3_mhc0_11 integer
+	, child_coverage_penta3_mhc12_23 integer
+	, child_coverage_penta3_mmb0_11 integer
+	, child_coverage_penta3_mmb12_23 integer
+	, child_coverage_polio0_mhc0_11 integer
+	, child_coverage_polio0_mmb0_11 integer
+	, child_coverage_polio1_mhc0_11 integer
+	, child_coverage_polio1_mhc12_23 integer
+	, child_coverage_polio1_mmb0_11 integer
+	, child_coverage_polio1_mmb12_23 integer
+	, child_coverage_polio2_mhc0_11 integer
+	, child_coverage_polio2_mhc12_23 integer
+	, child_coverage_polio2_mmb0_11 integer
+	, child_coverage_polio2_mmb12_23 integer
+	, child_coverage_polio3_mhc0_11 integer
+	, child_coverage_polio3_mhc12_23 integer
+	, child_coverage_polio3_mmb0_11 integer
+	, child_coverage_polio3_mmb12_23 integer
+	, child_coverage_ipv_mhc0_11 integer
+	, child_coverage_ipv_mmb0_11 integer
+	, child_coverage_rotarix1_mhc0_11 integer
+	, child_coverage_rotarix1_mhc12_23 integer
+	, child_coverage_rotarix1_mmb0_11 integer
+	, child_coverage_rotarix1_mmb12_23 integer
+	, child_coverage_rotarix2_mhc0_11 integer
+	, child_coverage_rotarix2_mhc12_23 integer
+	, child_coverage_rotarix2_mmb0_11 integer
+	, child_coverage_rotarix2_mmb12_23 integer
+	, child_coverage_sarampo1_mhc0_11 integer
+	, child_coverage_sarampo1_mhc12_23 integer
+	, child_coverage_sarampo1_mmb0_11 integer
+	, child_coverage_sarampo1_mmb12_23 integer
+	, child_coverage_sarampo2_mhc12_23 integer
+	, child_coverage_sarampo2_mmb12_23 integer
+	, child_coverage_hpv_fhc9_11y integer
+	, child_coverage_hpv_fmb9_11y integer
+	, child_coverage_hpv_target_group integer
+	, child_coverage_hpv_vials_opened integer
 	, full_vaccinations_male_hc integer
 	, full_vaccinations_male_mb integer
 	, full_vaccinations_female_hc integer
 	, full_vaccinations_female_mb integer
+	, motorbike_problem_lack_of_funding_for_fuel boolean
+	, motorbike_problem_repairs_scheduling_problem boolean
+	, motoribke_problem_lack_of_funding_for_repairs boolean
+	, motorbike_problem_missing_parts boolean
+	, motorbike_problem_other boolean
+	, motorbike_problem_other_description text
 );
