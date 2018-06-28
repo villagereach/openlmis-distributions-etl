@@ -27,7 +27,8 @@ DB_PORT = '5432'
 DB_USER = "postgres"
 PASSWORD = "p@ssw0rd"
 
-NUMBER_OF_DAYS = 548  # 548 is the number of days in 1.5 years
+#NUMBER_OF_DAYS = 890  # 890 is the number of days in 2.5 years
+NUMBER_OF_DAYS = 3025
 date_NUMBER_OF_DAYS_ago = datetime.datetime.now() - datetime.timedelta(days = NUMBER_OF_DAYS)
 
 # table names
