@@ -5,6 +5,7 @@ import psycopg2.extensions
 import psycopg2.extras
 import re
 import types
+import sys
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
 
@@ -19,16 +20,19 @@ Limitations:
     of SELV/Adult Coverage with just Tetanus.
 
 """
+print "Starting script"
 
 FIELD_MAP = 'fieldmap.csv'
 DB_NAME = 'open_lmis'
+#DB_NAME = 'selv-production-3-25-2019'
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = "postgres"
 PASSWORD = "p@ssw0rd"
 
 #NUMBER_OF_DAYS = 890  # 890 is the number of days in 2.5 years
-NUMBER_OF_DAYS = 3025
+NUMBER_OF_DAYS = 510
+#NUMBER_OF_DAYS = 75
 date_NUMBER_OF_DAYS_ago = datetime.datetime.now() - datetime.timedelta(days = NUMBER_OF_DAYS)
 
 # table names
@@ -480,6 +484,7 @@ def mapEpiInvToFacVisits(facVisitRows, epiInvTable, epiInvProdCodes):
         newColName = re.sub('rv', 'rotarix', newColName) #entry added on 4/8/2016
         newColName = re.sub('msddil', 'sarampo2diluent', newColName) #entry added on 4/8/2016
         newColName = re.sub('msd', 'sarampo2', newColName) #entry added on 4/8/2016
+        newColName = re.sub('measles-sarampo-rubella', 'measles_sarampo_rubella', newColName)
 
         return 'epi_inventory_' + newColName
     mapLineItemsToFacVisits(facVisitRows, epiInvTable, keyColName, epiInvProdCodes, cols, rename)
@@ -711,6 +716,11 @@ try:
     dbConn.commit()
 
     print "SelvData has completed"
+
+    today = datetime.datetime.now()
+    with open('/home/openlmis/distributions-etl/etl_status.txt', 'a') as the_file:
+        the_file.write("ETL last successfully ran at: " + str(today))
+
 except BaseException, err:
     if dbConn is not None:
         dbConn.rollback()

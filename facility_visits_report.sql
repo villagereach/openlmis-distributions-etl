@@ -53,6 +53,10 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_inventory_pcv10_existing integer
 	, epi_inventory_pcv10_delivered integer
 	, epi_inventory_pcv10_isa integer
+	, epi_inventory_pcv13_spoiled integer
+	, epi_inventory_pcv13_existing integer
+	, epi_inventory_pcv13_delivered integer
+	, epi_inventory_pcv13_isa integer
 	, epi_inventory_hpv2_spoiled integer
 	, epi_inventory_hpv2_existing integer
 	, epi_inventory_hpv2_delivered integer
@@ -65,6 +69,10 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, epi_inventory_measlesdil_existing integer
 	, epi_inventory_measlesdil_delivered integer
 	, epi_inventory_measlesdil_isa integer
+	, epi_inventory_measles_sarampo_rubella_spoiled integer
+	, epi_inventory_measles_sarampo_rubella_existing integer
+	, epi_inventory_measles_sarampo_rubella_delivered integer
+	, epi_inventory_measles_sarampo_rubella_isa integer
 	, epi_inventory_tetanus_spoiled integer
 	, epi_inventory_tetanus_existing integer
 	, epi_inventory_tetanus_delivered integer
@@ -451,4 +459,13 @@ CREATE TABLE facility_visits_report ( id serial PRIMARY KEY
 	, motorbike_problem_missing_parts boolean
 	, motorbike_problem_other boolean
 	, motorbike_problem_other_description text
-);
+); 
+
+GRANT CONNECT ON DATABASE open_lmis TO olreporter; 
+
+GRANT USAGE ON SCHEMA public TO olreporter; 
+
+GRANT SELECT ON facility_visits_report TO olreporter; 
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public 
+GRANT SELECT ON TABLES TO olreporter;

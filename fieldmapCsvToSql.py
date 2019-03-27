@@ -41,7 +41,12 @@ def writeCreateTableSql(filePath, fieldMap, tableName):
         constraints += ' NOT NULL' if fieldD['nullable'] is False else ''
         constraints += ' ' + fieldD['constraint'] if fieldD['constraint'] != '' else ''
         f.write('\t, ' + fieldName + ' ' + fieldD['type'] + constraints + '\n')
-    f.write(');')
+    f.write('); \n\n')
+
+    f.write('GRANT CONNECT ON DATABASE open_lmis TO olreporter; \n\n')
+    f.write('GRANT USAGE ON SCHEMA public TO olreporter; \n\n')
+    f.write('GRANT SELECT ON facility_visits_report TO olreporter; \n\n')
+    f.write('ALTER DEFAULT PRIVILEGES IN SCHEMA public \nGRANT SELECT ON TABLES TO olreporter;')
     f.close()
 
 
